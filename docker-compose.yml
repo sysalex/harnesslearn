@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: attendance-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: attendance_db
+      MYSQL_USER: attendance
+      MYSQL_PASSWORD: attendance123
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max-connections=100
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: attendance-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/attendance_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+      SPRING_DATASOURCE_USERNAME: attendance
+      SPRING_DATASOURCE_PASSWORD: attendance123
+      JWT_SECRET: your-256-bit-secret-key-here-change-in-production
+      JWT_EXPIRATION: 86400000
+      SPRING_PROFILES_ACTIVE: prod
+      TZ: Asia/Shanghai
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - backend_logs:/app/logs
+
+  # 前端服务
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: attendance-frontend
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080
+      TZ: Asia/Shanghai
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+    driver: local
+  backend_logs:
+    driver: local
+
+networks:
+  default:
+    name: attendance-network
