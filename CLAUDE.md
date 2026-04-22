@@ -172,6 +172,9 @@ View → Store (Pinia) → API Layer → Backend
 - 前端覆盖率 ≥ 80%（Vitest --coverage）
 - E2E 测试覆盖核心用户流程（Playwright）
 - 新功能必须先写测试（TDD）
+- 前端单元/组件测试默认使用 `Vitest + Vue Test Utils`
+- 前端端到端测试默认使用 `Playwright`
+- 纯骨架、占位页、样式调整等非关键用户流程任务，可不强制引入 Playwright；一旦涉及登录、打卡、请假、补卡、审批等完整流程，必须补 E2E
 
 ### 测试框架
 
@@ -181,6 +184,12 @@ View → Store (Pinia) → API Layer → Backend
 | 后端集成测试 | Spring Boot Test + TestContainers | `backend/pom.xml` |
 | 前端组件测试 | Vitest + Vue Test Utils | `frontend/vite.config.ts` |
 | E2E 测试 | Playwright | `frontend/playwright.config.ts` |
+
+### 前端测试分层
+
+- 页面组件、组合逻辑、路由占位验证：优先使用 `Vitest + Vue Test Utils`
+- 跨页面关键用户流程验证：使用 `Playwright`
+- 不要用 Playwright 替代本该由 Vitest 快速覆盖的组件级测试
 
 ## 领域模型（核心实体）
 

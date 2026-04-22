@@ -18,6 +18,7 @@
 - 数据库设计文档
 - 最小 Spring Boot 后端骨架（启动类、基础配置、上下文启动测试）
 - Vue 3 前端骨架（Vite + TypeScript + Vue Router + Pinia + Element Plus + 登录页占位）
+- 前端测试分层约定：组件测试默认 Vitest，E2E 默认 Playwright
 
 ### 技术栈
 
