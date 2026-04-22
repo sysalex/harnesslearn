@@ -20,13 +20,15 @@
   - 完成时间：2026-04-22
   - 说明：补齐最小 Spring Boot 启动骨架；当前验证命令需显式使用 IDEA 的 JDK 21（`%USERPROFILE%\\.jdks\\ms-21.0.10`）
 
-- [ ] 1.1.2 创建 Vue 3 项目结构
+- [x] 1.1.2 创建 Vue 3 项目结构
   - 优先级: REQUIRED
   - 依赖: 无
   - 验收标准:
-    - [ ] Vite + Vue 3 + TypeScript 项目结构
-    - [ ] Element Plus 集成
-    - [ ] 前端开发服务器可启动
+    - [x] Vite + Vue 3 + TypeScript 项目结构
+    - [x] Element Plus 集成
+    - [x] 前端开发服务器可启动
+  - 完成时间：2026-04-22
+  - 说明：已补齐 Vite + Vue 3 + TypeScript + Vue Router + Pinia + Element Plus 骨架，并提供登录页占位与基础测试
 
 - [ ] 1.1.3 配置 Docker 环境
   - 优先级: REQUIRED

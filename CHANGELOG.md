@@ -16,6 +16,8 @@
 - 任务清单（docs/task-list.md）
 - 完成标准（docs/definition-of-done.md）
 - 数据库设计文档
+- 最小 Spring Boot 后端骨架（启动类、基础配置、上下文启动测试）
+- Vue 3 前端骨架（Vite + TypeScript + Vue Router + Pinia + Element Plus + 登录页占位）
 
 ### 技术栈
 
