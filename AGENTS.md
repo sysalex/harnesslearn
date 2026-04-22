@@ -198,14 +198,21 @@ planner → tdd-guide → code-reviewer → security-reviewer → DoD 核查
 
 ### L1: 工具级（自动）
 
-**PostToolUse Hooks**（在 .claude/settings.json 中配置）：
-- Write/Edit Java 文件 → google-java-format
-- Write/Edit Vue/TS 文件 → prettier + eslint
-- 危险命令 → PreToolUse 拦截
+**自动化配置**（详见 docs/feedback-loop.md）：
+- Java 文件保存后 → 自动编译检查
+- Vue/TS 文件保存后 → 自动类型检查
+- 危险命令 → 自动拦截
 
 ### L2: 任务级（手动触发）
 
 **每个任务完成前**：
+
+**方式 1：运行质量门禁脚本（推荐）**
+```bash
+scripts\check.bat
+```
+
+**方式 2：手动执行**
 ```bash
 # 后端
 cd backend
@@ -228,10 +235,11 @@ npm run test                      # 运行测试
 
 ### L3: 会话级（自动）
 
-**Stop Hook**（会话结束时自动运行）：
+**会话结束时**（详见 docs/feedback-loop.md）：
 - 运行 lint + 类型检查
 - 提醒核对 DoD
 - 提醒更新 task-list.md
+- 提醒更新 CHANGELOG.md
 
 ### L4: 阶段级（手动）
 
@@ -286,6 +294,26 @@ Code Review 失败 → 查看问题列表 → 修复 CRITICAL/HIGH → 重新审
 - 发现安全问题必须立即停止当前工作
 - 修复后必须重新运行 security-reviewer
 - 所有安全问题必须在提交前解决
+- 参考 docs/security-checklist.md 进行全量检查
+
+### Harness 审查
+
+**何时运行 Harness 审查**：
+- 重大功能完成后
+- 阶段切换前
+- 代码交接前
+
+**执行方式**：
+```bash
+# 查阅 docs/harness-checklist.md
+# 逐项检查：
+# 1. Agent 指令（AGENTS.md）
+# 2. 工具设计
+# 3. 上下文传递
+# 4. 规划产物
+# 5. 权限和沙箱
+# 6. 验证循环
+```
 
 ## 决策树
 
@@ -334,12 +362,18 @@ Code Review 失败 → 查看问题列表 → 修复 CRITICAL/HIGH → 重新审
    - [ ] CRITICAL/HIGH 问题已修复
    - [ ] security-reviewer 已运行（如适用）
 
-3. **文档更新**
+3. **安全检查**（详见 docs/security-checklist.md）
+   - [ ] OWASP Top 10 检查通过
+   - [ ] 无敏感信息泄露
+   - [ ] 权限校验到位
+   - [ ] 输入验证完整
+
+4. **文档更新**
    - [ ] task-list.md 状态已更新
    - [ ] CHANGELOG.md 已更新
    - [ ] API 文档已更新（如适用）
 
-4. **日志和异常**
+5. **日志和异常**
    - [ ] 关键操作有日志
    - [ ] 异常处理完整
 
@@ -456,7 +490,11 @@ npm run test                        # 运行测试
 - 变更日志：`CHANGELOG.md`
 - API 规范：`docs/api-spec.md`
 - 架构文档：`docs/architecture.md`
-- Hooks 配置：`.claude/settings.json`
+- 反馈循环：`docs/feedback-loop.md`
+- 安全检查：`docs/security-checklist.md`
+- Harness 审查：`docs/harness-checklist.md`
+- 质量门禁脚本：`scripts/check.bat`
+- CI/CD 配置：`.github/workflows/ci.yml`
 
 ### Agent 快速选择
 
