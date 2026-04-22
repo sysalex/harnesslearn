@@ -58,55 +58,68 @@ VITE_API_BASE_URL=http://localhost:8080
 
 ```
 harness-engineering-attendance-system/
-├── CLAUDE.md                    # 本文件：Harness 核心规范
-├── AGENTS.md                    # Agent 行为规范和工作流程
-├── .claude/
-│   └── settings.json            # Hooks 和权限配置
-├── docs/
-│   ├── architecture.md          # 系统架构设计
-│   ├── api-spec.md              # API 接口规范
-│   ├── domain-model.md          # 领域模型
-│   ├── task-list.md             # 任务清单和进度追踪
-│   ├── definition-of-done.md    # 完成标准（DoD）
-│   ├── feedback-loop.md         # 反馈循环机制
-│   └── adr/                     # 架构决策记录
-├── frontend/                    # Vue 3 前端
-│   ├── src/
-│   │   ├── api/                 # API 请求层
-│   │   ├── components/          # 通用组件
-│   │   ├── views/               # 页面视图
-│   │   ├── stores/              # Pinia 状态管理
-│   │   ├── router/              # 路由配置
-│   │   ├── types/               # TypeScript 类型定义
-│   │   └── utils/               # 工具函数
-│   ├── tests/                   # 前端测试
-│   └── vite.config.ts
-├── backend/                     # Java Spring Boot 后端
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/attendance/
-│   │   │   │   ├── config/      # 配置类
-│   │   │   │   ├── controller/  # Controller 层
-│   │   │   │   ├── service/     # Service 层
-│   │   │   │   ├── mapper/      # Mapper 层
-│   │   │   │   ├── entity/      # 实体类
-│   │   │   │   ├── dto/         # DTO 类
-│   │   │   │   ├── common/      # 公共类
-│   │   │   │   ├── security/    # 安全相关
-│   │   │   │   └── util/        # 工具类
-│   │   │   └── resources/
-│   │   │       ├── application.yml
-│   │   │       └── mapper/      # MyBatis XML
-│   │   └── test/
-│   │       └── java/com/attendance/
+├── CLAUDE.md                         # 本文件：项目事实与架构约束
+├── AGENTS.md                         # Agent 执行流程与协作规范
+├── CHANGELOG.md                      # 变更日志
+├── session-handoff.md                # 会话交接记录
+├── docker-compose.yml                # Docker 编排
+├── backend/                          # Spring Boot 后端（当前为最小骨架）
 │   ├── pom.xml
-│   └── Dockerfile
+│   └── src/
+│       ├── main/
+│       │   ├── java/com/attendance/
+│       │   │   └── AttendanceSystemApplication.java
+│       │   └── resources/
+│       │       └── application.yml
+│       └── test/
+│           └── java/com/attendance/
+│               └── AttendanceSystemApplicationTests.java
+├── frontend/                         # Vue 3 前端骨架
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── eslint.config.mjs
+│   ├── public/
+│   │   └── favicon.svg
+│   └── src/
+│       ├── App.vue
+│       ├── App.spec.ts              # 当前组件级测试入口
+│       ├── main.ts
+│       ├── style.css
+│       ├── router/
+│       │   └── index.ts
+│       ├── stores/
+│       │   ├── app.ts
+│       │   └── index.ts
+│       └── views/
+│           └── LoginView.vue
+├── docs/
+│   ├── README.md                     # 文档导航
+│   ├── architecture.md               # 系统架构设计
+│   ├── api-spec.md                   # API 接口规范
+│   ├── domain-model.md               # 领域模型
+│   ├── task-list.md                  # 任务清单和进度追踪
+│   ├── definition-of-done.md         # 完成标准（DoD）
+│   ├── feedback-loop.md              # 反馈循环机制
+│   ├── security-checklist.md         # 安全检查清单
+│   ├── harness-checklist.md          # Harness 自检清单
+│   ├── autonomy-levels.md            # Agent 自治边界
+│   ├── invariants-and-guardrails.md  # 不可破坏约束
+│   ├── tech-debt.md                  # 技术债清单
+│   ├── checklists/
+│   │   └── change-preflight.md
+│   ├── retrospectives/
+│   │   └── README.md
+│   └── adr/
+│       └── 001-choose-mybatis-plus.md
 ├── sql/
-│   └── init.sql                 # 数据库初始化脚本
-├── docker-compose.yml           # 本地开发环境
-├── CHANGELOG.md                 # 变更日志
-└── README.md                    # 项目说明
+│   └── init.sql                      # 数据库初始化脚本
+└── scripts/
+    └── check.bat                     # 质量门禁脚本
 ```
+
+说明：
+- 上面展示的是当前仓库已落地的实际结构，不包含 `node_modules`、`dist`、`target` 等构建产物。
+- `frontend/src/api`、`frontend/src/types`、`frontend/src/utils` 以及后端分层目录会随后续任务逐步补齐，不代表当前仓库已经存在。
 
 ## 架构约束（Agent 必须遵守）
 
