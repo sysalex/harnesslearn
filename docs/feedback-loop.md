@@ -278,43 +278,91 @@ npm run test:coverage
 
 ## 6. 自动化配置示例
 
-### 6.1 完整 Hooks 配置
+### 6.1 Claude Code Hooks 配置（参考）
 
-**文件**：`.claude/settings.json`
+> **注意**：此配置适用于 Claude Code，其他 AI 助手可参考其中的质量门禁理念手动执行。
+
+**文件**：`.claude/settings.json`（如果使用 Claude Code）
 
 ```json
 {
+  "permissions": {
+    "allow": ["Bash(mvn *)", "Bash(npm *)", "Bash(git *)"],
+    "deny": ["Bash(rm -rf /)", "Bash(DROP DATABASE)", "Bash(git push --force)"]
+  },
   "hooks": {
-    "PreToolUse": {
-      "Bash": [
-        "if command contains 'rm -rf /' or 'DROP DATABASE' or 'git push --force' then deny"
-      ]
-    },
-    "PostToolUse": {
-      "Write": [
-        "if file ends with '.java' then cd backend && mvn compile -q",
-        "if file ends with '.ts' or '.vue' then cd frontend && npm run type-check"
-      ],
-      "Edit": [
-        "if file ends with '.java' then google-java-format --replace {{file_path}}",
-        "if file ends with '.ts' or '.vue' then npx prettier --write {{file_path}} && npx eslint --fix {{file_path}}"
-      ]
-    },
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{
+          "type": "command",
+          "command": "bash -c 'CMD=$(echo \"$CLAUDE_TOOL_INPUT_COMMAND\" | tr -d \"\\n\"); BLOCKED=\"\"; echo \"$CMD\" | grep -qiE \"rm -rf /|DROP DATABASE|git push --force\" && BLOCKED=\"危险命令被拦截: $CMD\"; if [ -n \"$BLOCKED\" ]; then echo \"[PreToolUse BLOCK] $BLOCKED\" >&2; exit 1; fi'"
+        }]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if [[ \"$CLAUDE_TOOL_INPUT_FILE_PATH\" == *.java ]]; then cd backend && mvn compile -q 2>/dev/null && echo \"[OK] Java 编译成功\" || echo \"[FAIL] Java 编译失败\"; fi'"
+          },
+          {
+            "type": "command",
+            "command": "bash -c 'if [[ \"$CLAUDE_TOOL_INPUT_FILE_PATH\" =~ \\.(vue|ts|tsx|js)$ ]]; then cd frontend && npm run type-check 2>/dev/null && echo \"[OK] TypeScript 检查通过\" || echo \"[WARN] TypeScript 检查失败\"; fi'"
+          }
+        ]
+      }
+    ],
     "Stop": [
-      "cd backend && mvn clean test -q",
-      "cd frontend && npm run lint",
-      "echo '========================================'",
-      "echo '会话结束，请执行以下操作：'",
-      "echo '1. 核对 docs/definition-of-done.md 清单'",
-      "echo '2. 更新 docs/task-list.md 状态'",
-      "echo '3. 更新 CHANGELOG.md'",
-      "echo '========================================'"
+      {
+        "hooks": [{
+          "type": "command",
+          "command": "bash -c 'echo \"\\n========================================\"; echo \"[质量门禁] 会话结束检查\"; echo \"========================================\"; echo \"请确认已核对 docs/definition-of-done.md 清单\"; echo \"请确认已更新 docs/task-list.md 状态\"; echo \"请确认已更新 CHANGELOG.md\"; echo \"========================================\"'"
+        }]
+      }
     ]
   }
 }
 ```
 
-### 6.2 VS Code 配置（可选）
+### 6.2 手动执行质量门禁（通用）
+
+如果不使用 Claude Code，可以在每个任务完成后手动运行：
+
+**后端质量检查**：
+```bash
+cd backend
+
+# 1. 编译检查
+mvn compile -q
+
+# 2. 运行测试
+mvn clean test
+
+# 3. 代码规范检查
+mvn checkstyle:check
+
+# 4. 生成覆盖率报告
+mvn jacoco:report
+```
+
+**前端质量检查**：
+```bash
+cd frontend
+
+# 1. TypeScript 类型检查
+npm run type-check
+
+# 2. ESLint 检查
+npm run lint
+
+# 3. 运行测试
+npm run test
+```
+
+### 6.3 VS Code 配置（可选）
 
 **文件**：`.vscode/settings.json`
 
