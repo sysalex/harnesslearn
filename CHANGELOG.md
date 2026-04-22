@@ -48,3 +48,25 @@
 
 [Unreleased]: https://github.com/your-repo/attendance-system/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/your-repo/attendance-system/releases/tag/v0.1.0
+## 文档补充说明（2026-04-22）
+
+### 新增
+
+- Harness 规范补充说明文档
+- 跨会话产物模板（`session-handoff.md`, `.harness/learnings.md`）
+- 阶段回顾目录说明（`docs/retrospectives/README.md`）
+
+### 调整
+
+- 任务状态统一为 `[ ] / [~] / [x] / [!]`
+- 主规范补充会话交接与经验沉淀要求
+- 主规范补充 `/health`、metrics、`X-Request-ID` 可观测性约定
+- 新增 `docs/autonomy-levels.md`
+- 新增 `docs/checklists/change-preflight.md`
+- 新增 `docs/invariants-and-guardrails.md`
+- 新增 `docs/README.md`
+- 新增 `docs/tech-debt.md`
+- 优化 `AGENTS.md` 与 `CLAUDE.md` 顶部结构，改为入口式阅读
+- 新增最小 Spring Boot 后端骨架（启动类、基础配置、上下文启动测试）
+
+---

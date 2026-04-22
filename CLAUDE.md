@@ -266,3 +266,45 @@ logger.info('操作描述', { userId: 1 })
 - 保存 Java 文件后自动运行 google-java-format
 - 保存 Vue/TS 文件后自动运行 prettier + eslint
 - 会话结束时运行 lint + 类型检查质量门禁
+# Harness 补充约定
+
+## 任务状态
+
+- 任务状态统一使用 `[ ]`、`[~]`、`[x]`、`[!]`
+- 阻塞任务必须在 `docs/task-list.md` 中注明原因和下一步处理方式
+
+## 会话交接
+
+- 会话结束或中断前更新 `session-handoff.md`
+- 关键经验、踩坑、临时决策记录到 `.harness/learnings.md`
+- 这两个文件用于跨会话恢复上下文，不替代正式的任务清单和变更日志
+
+## 可观测性基线
+
+- 后端应提供 `GET /health` 作为最小健康检查端点
+- 系统应提供运行指标入口（metrics），至少覆盖请求量、错误率、平均响应时间
+- 每个请求应分配唯一 `request_id`，并通过响应头 `X-Request-ID` 返回
+- 前端错误上报、后端日志、慢请求日志都应尽可能携带 `request_id`
+
+---
+# CLAUDE Quick Start
+
+首读顺序：
+1. 本文件前 40 行
+2. `docs/task-list.md`
+3. `docs/invariants-and-guardrails.md`
+4. `docs/definition-of-done.md`
+5. `docs/feedback-loop.md`
+6. `docs/README.md`
+
+建议把本文件当作入口，而不是把所有执行细节都放在这里。
+
+专项文档：
+- `docs/autonomy-levels.md`
+- `docs/checklists/change-preflight.md`
+- `docs/invariants-and-guardrails.md`
+- `docs/README.md`
+- `docs/security-checklist.md`
+- `docs/harness-checklist.md`
+
+---

@@ -513,3 +513,73 @@ npm run test                        # 运行测试
 ---
 
 **记住**：Agent 的目标是高质量、可维护的代码，而不是快速完成任务。质量优先，速度其次。
+# Harness 补充工作流
+
+## 任务状态补充
+
+- 任务状态统一使用 `[ ]`、`[~]`、`[x]`、`[!]`
+- `[!]` 表示阻塞中，必须写明原因、影响范围和下一步处理方式
+
+## 跨会话产物
+
+- `session-handoff.md`
+  - 记录当前状态、阻塞项、下一步和验证结果
+- `.harness/learnings.md`
+  - 记录本次任务学到的经验、踩坑和后续建议
+
+## 执行要求
+
+- 任务完成、中断或交接前必须更新 `session-handoff.md`
+- 出现可复用经验、重复错误或重要决策时更新 `.harness/learnings.md`
+- 这两个文件是补充上下文，不替代 `docs/task-list.md` 和 `CHANGELOG.md`
+
+## 可观测性基线
+
+- 规范层要求后端提供 `GET /health` 健康检查端点
+- 规范层要求系统具备 metrics 入口，最少覆盖请求量、错误率、平均响应时间
+- 所有请求应生成唯一 `request_id`，并通过 `X-Request-ID` 返回给客户端
+- 关键日志、错误上报和慢请求记录应尽可能带上 `request_id`
+
+---
+# AGENTS Quick Start
+
+首读顺序：
+1. `docs/task-list.md`
+2. `docs/checklists/change-preflight.md`
+3. `docs/autonomy-levels.md`
+4. `docs/invariants-and-guardrails.md`
+5. `docs/README.md`
+6. 本文件其余章节
+
+使用原则：
+- 本文件负责“怎么做”
+- `CLAUDE.md` 负责“做什么”
+- 专项规则优先看对应文档，不要把所有细节都回忆成本文件正文
+
+专项文档：
+- `docs/checklists/change-preflight.md`
+- `docs/autonomy-levels.md`
+- `docs/invariants-and-guardrails.md`
+- `docs/README.md`
+- `session-handoff.md`
+- `.harness/learnings.md`
+
+---
+## 规范巡检机制
+
+为避免规范与实际任务逐步偏离，自 2026-04-22 起，每完成一个任务后默认执行一次轻量规范巡检。
+
+### 巡检内容
+
+- 是否出现新的规则缺口
+- 是否存在重复规则或职责冲突
+- 是否需要把新增文件补进 `docs/README.md`
+- 是否需要更新 `docs/tech-debt.md`
+
+### 处理规则
+
+- 低风险规范修正：可直接更新文档
+- 高风险规范调整：先确认再改
+- 暂不处理的问题：登记到 `docs/tech-debt.md`
+
+---
