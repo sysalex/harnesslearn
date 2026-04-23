@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 
+/**
+ * 锁定 JWT 工具类的核心行为，避免后续接 Spring Security 时把 token 语义改坏。
+ */
 class JwtTokenProviderTest {
 
     private static final String SECRET =

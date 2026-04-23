@@ -13,6 +13,10 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * JWT 工具类，负责 access / refresh token 的生成、校验与解析。
+ * Spring Security 接入后应继续复用这里的解析逻辑，不要在过滤器中重复造轮子。
+ */
 @Component
 public class JwtTokenProvider {
 
@@ -109,8 +113,10 @@ public class JwtTokenProvider {
     private SecretKey buildSigningKey(String secret) {
         byte[] decodedSecret;
         try {
+            // 兼容外部直接提供 Base64 密钥的场景。
             decodedSecret = Decoders.BASE64.decode(secret);
         } catch (RuntimeException exception) {
+            // 普通字符串密钥在当前项目里也允许，避免把所有环境都强绑成 Base64。
             decodedSecret = secret.getBytes(StandardCharsets.UTF_8);
         }
         return Keys.hmacShaKeyFor(padSecretIfNeeded(decodedSecret));
@@ -120,6 +126,7 @@ public class JwtTokenProvider {
         if (secretBytes.length >= 32) {
             return secretBytes;
         }
+        // HS256 要求足够长度的 key；短密钥在开发环境下补齐，避免直接抛异常。
         byte[] paddedSecret = new byte[32];
         System.arraycopy(secretBytes, 0, paddedSecret, 0, secretBytes.length);
         return paddedSecret;

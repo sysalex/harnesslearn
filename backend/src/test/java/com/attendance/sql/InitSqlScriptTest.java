@@ -13,6 +13,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 
+/**
+ * 用结构性测试提前挡住 SQL 初始化脚本里最容易漏掉的建表顺序问题。
+ */
 class InitSqlScriptTest {
 
     private static final Path INIT_SQL_PATH = Path.of("..", "sql", "init.sql");

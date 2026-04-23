@@ -32,6 +32,7 @@
 
 - 启用 MyBatis-Plus 数据源配置、Mapper 扫描和 MySQL 分页拦截器
 - 新增 `JwtTokenProvider` 和 `jwt.*` 配置项，启用 JWT access/refresh token 基础能力
+- 在 `AGENTS.md` 补充“代码注释默认使用中文”的仓库规范
 
 ### 技术栈
 

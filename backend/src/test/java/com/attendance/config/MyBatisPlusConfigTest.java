@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 
+/**
+ * 锁定 1.2.2 的三个验收点：数据源、Mapper 扫描、分页插件。
+ */
 @SpringBootTest
 class MyBatisPlusConfigTest {
 
