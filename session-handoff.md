@@ -12,6 +12,7 @@
 - `1.3.1` 已完成：新增 `JwtTokenProvider`，支持 access/refresh token 生成、校验、刷新和 Claims 解析，并通过单元测试覆盖核心行为。
 - `1.3.2` 已完成：新增 `SecurityConfig` 和 `JwtAuthenticationFilter`，放行 `/api/auth/login`，其余接口默认要求认证，并通过配置测试与过滤器测试验证。
 - 规范已加强：`AGENTS.md`、`definition-of-done.md`、`autonomy-levels.md`、`feedback-loop.md` 现已明确“任务完成且验证通过后默认自动 commit + push”。
+- 规范已加强：`AGENTS.md` 现已明确多 Agent 默认触发边界，满足“2 个及以上无共享写入、无顺序依赖子任务”时默认并行；主线程负责集成、验证、文档更新和提交。
 - 本地 MySQL 导入已确认：不要用 PowerShell 管道把 SQL 喂给 `mysql.exe`，否则中文会在进入原生进程前被转坏；应使用 `cmd` 文件重定向并配合 `--default-character-set=utf8mb4`。
 - 仓库已启用“任务完成后自动 commit + push”的默认流程。
 

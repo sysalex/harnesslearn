@@ -36,6 +36,7 @@
 - 在 `AGENTS.md` 补充“代码注释默认使用中文”的仓库规范
 - 新增 `SecurityConfig` 与 `JwtAuthenticationFilter`，启用 Spring Security 无状态鉴权主链路
 - 强化规范中的任务收尾要求：任务完成后默认执行 `commit + push`
+- 强化多 Agent 协作规则：满足无共享写入且无顺序依赖时默认并行，主线程负责集成、验证与提交
 
 ### 技术栈
 
