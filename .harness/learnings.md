@@ -119,3 +119,20 @@
 
 - 后续接 `1.3.2 Spring Security` 时，继续复用 `JwtTokenProvider`，不要在过滤器或配置类里重复写 token 解析逻辑。
 - 如果后面要接外部环境中的 Base64 密钥，优先保留当前“Base64 优先，失败回退普通字符串”的兼容策略。
+
+## 2026-04-23 - Spring Security 与 JWT 过滤器可以并行拆，但最终要回到独立文件
+
+### 背景
+
+推进 `1.3.2 配置 Spring Security` 时，我把“安全配置”和“JWT 过滤器”拆给了两个并行 agent。过程中一个分支先把过滤器临时塞进 `SecurityConfig.java`，另一个分支补了独立的过滤器测试。
+
+### 学到的内容
+
+- 这类任务可以并行拆，但职责边界要稳定：`SecurityConfig` 负责安全链和放行规则，`JwtAuthenticationFilter` 负责 token 到 `SecurityContext` 的恢复。
+- 并行实现时即使临时产物能跑，也应该在主线集成阶段把类落回独立文件，否则很容易出现包名错位、同名类冲突或后续扩展困难。
+- 对安全配置这类基础设施，`SecurityConfigTest` 和 `JwtAuthenticationFilterTest` 分开锁行为，比把所有断言塞进一个上下文测试更稳。
+
+### 后续建议
+
+- 后续继续多 agent 时，优先按“配置类 / 过滤器 / 控制器 / 服务 / Mapper”这种天然边界拆写入范围。
+- 主线集成时先检查包名、Bean 依赖和文件归属，再跑完整测试，不要只看子 agent 的局部通过结果。

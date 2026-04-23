@@ -22,6 +22,7 @@
 - 后端 `InitSqlScriptTest`，用于校验初始化脚本包含核心表、管理员种子数据、全局考勤规则，并禁止建表阶段前向外键引用
 - 后端 `MyBatisPlusConfigTest`，用于校验数据源配置、Mapper 扫描配置和 MySQL 分页拦截器
 - 后端 `JwtTokenProviderTest`，用于校验 JWT 的生成、校验、刷新、篡改拒绝和 Claims 解析
+- 后端 `SecurityConfigTest` 和 `JwtAuthenticationFilterTest`，用于校验登录接口放行、受保护接口鉴权和 JWT 过滤器行为
 
 ### 修复
 
@@ -33,6 +34,7 @@
 - 启用 MyBatis-Plus 数据源配置、Mapper 扫描和 MySQL 分页拦截器
 - 新增 `JwtTokenProvider` 和 `jwt.*` 配置项，启用 JWT access/refresh token 基础能力
 - 在 `AGENTS.md` 补充“代码注释默认使用中文”的仓库规范
+- 新增 `SecurityConfig` 与 `JwtAuthenticationFilter`，启用 Spring Security 无状态鉴权主链路
 
 ### 技术栈
 

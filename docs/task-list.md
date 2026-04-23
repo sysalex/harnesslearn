@@ -81,13 +81,17 @@
   - 说明：JWT 密钥与过期时间通过 `jwt.*` 配置读取，支持环境变量覆盖
   - 说明：已通过 `JwtTokenProviderTest` 验证生成、校验、刷新、篡改拒绝和 Claims 解析
 
-- [ ] 1.3.2 配置 Spring Security
+- [x] 1.3.2 配置 Spring Security
   - 优先级: REQUIRED
   - 依赖: 1.3.1
   - 验收标准:
-    - [ ] JWT 认证过滤器
-    - [ ] 权限校验拦截器
-    - [ ] 公开接口配置（登录）
+    - [x] JWT 认证过滤器
+    - [x] 权限校验拦截器
+    - [x] 公开接口配置（登录）
+  - 完成时间：2026-04-23
+  - 说明：新增 `SecurityConfig`，启用无状态安全链，放行 `/api/auth/login`，其余请求默认要求认证
+  - 说明：新增 `JwtAuthenticationFilter`，从 Bearer Token 恢复用户名和角色权限到 `SecurityContext`
+  - 说明：已通过 `SecurityConfigTest` 与 `JwtAuthenticationFilterTest` 验证公开接口、受保护接口和过滤器行为
 
 - [ ] 1.3.3 实现用户登录接口
   - 优先级: REQUIRED
