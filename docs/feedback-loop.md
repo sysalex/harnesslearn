@@ -203,6 +203,7 @@ npm run test:coverage
 2. ✅ 前端 lint 检查
 3. ✅ 提醒核对 DoD 清单
 4. ✅ 提醒更新任务状态
+5. ✅ 提醒核对是否已完成默认 `commit + push`
 
 ### 4.3 会话交接
 

@@ -35,6 +35,7 @@
 - 新增 `JwtTokenProvider` 和 `jwt.*` 配置项，启用 JWT access/refresh token 基础能力
 - 在 `AGENTS.md` 补充“代码注释默认使用中文”的仓库规范
 - 新增 `SecurityConfig` 与 `JwtAuthenticationFilter`，启用 Spring Security 无状态鉴权主链路
+- 强化规范中的任务收尾要求：任务完成后默认执行 `commit + push`
 
 ### 技术栈
 
