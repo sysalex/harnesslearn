@@ -22,7 +22,6 @@ CREATE TABLE `department` (
   PRIMARY KEY (`id`),
   KEY `idx_manager` (`manager_id`),
   KEY `idx_parent` (`parent_id`),
-  CONSTRAINT `fk_department_manager` FOREIGN KEY (`manager_id`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_department_parent` FOREIGN KEY (`parent_id`) REFERENCES `department` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部门表';
 
@@ -50,7 +49,6 @@ CREATE TABLE `user` (
 
 -- 更新部门表的外键约束（因为 user 表已创建）
 ALTER TABLE `department`
-  DROP FOREIGN KEY `fk_department_manager`,
   ADD CONSTRAINT `fk_department_manager` FOREIGN KEY (`manager_id`) REFERENCES `user` (`id`);
 
 -- ========================================

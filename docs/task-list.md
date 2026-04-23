@@ -30,40 +30,56 @@
   - 完成时间：2026-04-22
   - 说明：已补齐 Vite + Vue 3 + TypeScript + Vue Router + Pinia + Element Plus 骨架，并提供登录页占位与基础测试
 
-- [ ] 1.1.3 配置 Docker 环境
+- [!] 1.1.3 配置 Docker 环境
   - 优先级: REQUIRED
   - 依赖: 1.1.1, 1.1.2
   - 验收标准:
     - [ ] docker-compose.yml 配置完整
     - [ ] MySQL 容器可启动
     - [ ] 一键启动所有服务
+  - 阻塞原因：当前本地开发环境未安装 Docker，暂不具备容器验证条件
+  - 影响范围：Phase 1 的容器化相关任务顺延，不影响数据库脚本与后端基础集成工作
+  - 下一步处理：先继续 1.2.1 数据库初始化脚本，待具备 Docker 环境后再回补 1.1.3
 
 ### 1.2 数据库设计
 
-- [ ] 1.2.1 创建数据库初始化脚本
+- [x] 1.2.1 创建数据库初始化脚本
   - 优先级: REQUIRED
   - 依赖: 无
   - 验收标准:
-    - [ ] sql/init.sql 包含所有表结构
-    - [ ] 包含初始数据（管理员账号）
-    - [ ] 脚本可执行无错误
+    - [x] sql/init.sql 包含所有表结构
+    - [x] 包含初始数据（管理员账号）
+    - [x] 脚本可执行无错误
+  - 完成时间：2026-04-23
+  - 说明：补齐初始化脚本结构校验测试，覆盖核心表存在性、管理员种子数据、全局考勤规则，以及建表阶段禁止前向外键引用
+  - 说明：已修复 `department` 表在建表阶段前向引用 `user` 表的问题，改为在 `user` 表创建后再追加 `manager_id` 外键
+  - 说明：已在本地 MySQL 8.0.16 实例中真实执行 `sql/init.sql`，验证通过
 
-- [ ] 1.2.2 配置 MyBatis-Plus
+- [x] 1.2.2 配置 MyBatis-Plus
   - 优先级: REQUIRED
   - 依赖: 1.1.1
   - 验收标准:
-    - [ ] 数据源配置正确
-    - [ ] Mapper 扫描配置
-    - [ ] 分页插件配置
+    - [x] 数据源配置正确
+    - [x] Mapper 扫描配置
+    - [x] 分页插件配置
+  - 完成时间：2026-04-23
+  - 说明：在 `application.yml` 中补齐 MySQL 数据源配置，支持通过 `DB_URL` / `DB_USERNAME` / `DB_PASSWORD` 覆盖
+  - 说明：启动类已开启 `@MapperScan("com.attendance.mapper")`
+  - 说明：新增 `MyBatisPlusConfig`，注册 MySQL 分页拦截器
+  - 说明：已通过 `MyBatisPlusConfigTest` 验证上述三项配置
 
 ### 1.3 认证授权模块
 
-- [ ] 1.3.1 实现 JWT 工具类
+- [x] 1.3.1 实现 JWT 工具类
   - 优先级: REQUIRED
   - 依赖: 1.1.1
   - 验收标准:
-    - [ ] Token 生成/验证/刷新
-    - [ ] 单元测试覆盖率 ≥ 80%
+    - [x] Token 生成/验证/刷新
+    - [x] 单元测试覆盖率 ≥ 80%
+  - 完成时间：2026-04-23
+  - 说明：新增 `JwtTokenProvider`，支持 access token 与 refresh token 生成、校验、解析和刷新
+  - 说明：JWT 密钥与过期时间通过 `jwt.*` 配置读取，支持环境变量覆盖
+  - 说明：已通过 `JwtTokenProviderTest` 验证生成、校验、刷新、篡改拒绝和 Claims 解析
 
 - [ ] 1.3.2 配置 Spring Security
   - 优先级: REQUIRED
@@ -255,7 +271,7 @@
 
 ---
 
-**最后更新**: 2026-04-22  
+**最后更新**: 2026-04-23  
 **版本**: v1.0.0
 # Harness 规范补充记录
 

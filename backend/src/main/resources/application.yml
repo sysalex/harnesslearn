@@ -1,6 +1,19 @@
 spring:
   application:
     name: attendance-system
+  datasource:
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/attendance_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mybatis-plus:
+    configuration:
+      map-underscore-to-camel-case: true
+
+jwt:
+  secret: ${JWT_SECRET:${random.uuid}${random.uuid}}
+  access-token-expiration-minutes: ${JWT_ACCESS_TOKEN_EXPIRATION_MINUTES:30}
+  refresh-token-expiration-days: ${JWT_REFRESH_TOKEN_EXPIRATION_DAYS:7}
 
 server:
   port: 8080

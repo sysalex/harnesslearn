@@ -19,6 +19,19 @@
 - 最小 Spring Boot 后端骨架（启动类、基础配置、上下文启动测试）
 - Vue 3 前端骨架（Vite + TypeScript + Vue Router + Pinia + Element Plus + 登录页占位）
 - 前端测试分层约定：组件测试默认 Vitest，E2E 默认 Playwright
+- 后端 `InitSqlScriptTest`，用于校验初始化脚本包含核心表、管理员种子数据、全局考勤规则，并禁止建表阶段前向外键引用
+- 后端 `MyBatisPlusConfigTest`，用于校验数据源配置、Mapper 扫描配置和 MySQL 分页拦截器
+- 后端 `JwtTokenProviderTest`，用于校验 JWT 的生成、校验、刷新、篡改拒绝和 Claims 解析
+
+### 修复
+
+- 修正 `sql/init.sql` 中 `department` 表对 `user` 表的前向外键引用，改为在 `user` 表创建后追加 `manager_id` 外键
+- 在本地 MySQL 8.0.16 实例中完成 `sql/init.sql` 的真实执行验证，确认核心表、管理员种子数据和全局考勤规则初始化成功
+
+### 变更
+
+- 启用 MyBatis-Plus 数据源配置、Mapper 扫描和 MySQL 分页拦截器
+- 新增 `JwtTokenProvider` 和 `jwt.*` 配置项，启用 JWT access/refresh token 基础能力
 
 ### 技术栈
 
