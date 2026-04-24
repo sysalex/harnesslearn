@@ -22,14 +22,16 @@
 - 后端登录链路：`AuthController`、`AuthService`、`LoginRequest`、`LoginResponse`、统一响应与全局异常处理
 - 后端 `UserService` 与 `UserServiceImpl`，用于承接 `IService` / `ServiceImpl` 风格的用户领域能力
 - 后端 `UserServiceArchitectureTest`，用于锁定 MyBatis-Plus 服务层继承结构与公共实体约束
-- 后端公共 `BaseEntity`，统一承接审计字段、启用状态、逻辑删除、创建时间和更新时间
+- 后端公共 `BaseEntity`，统一承接 `id`、`createdByUserId`、`createdByUserName`、`createdTime`、`updatedByUserId`、`updatedByUserName`、`updatedTime`、`enabledFlag`、`deletedFlag`
+- 数据库迁移脚本 `sql/migrations/20260424_align_common_base_columns.sql`，用于把既有表结构对齐到新的公共字段命名
 
 ### 修复
 
 - 修正 `sql/init.sql` 中 `department` 表对 `user` 表的前向外键引用，改为在 `user` 表创建后追加 `manager_id` 外键
 - 在本地 MySQL 8.0.16 实例中完成 `sql/init.sql` 的真实执行验证，确认核心表、管理员种子数据和全局考勤规则初始化成功
 - 修正登录链路的 MyBatis-Plus 用法，服务层保留 `IService` / `ServiceImpl` 结构，但单表用户名查询改为 `lambdaQuery()`，不再保留 `UserMapper.xml`
-- 修正用户公共字段建模，`status` 已切换为 `is_enabled` / `is_deleted`，并补齐创建人、更新人相关字段
+- 修正公共字段建模，用户及基础表统一改为 `createdByUserId` / `createdByUserName` / `createdTime` / `updatedByUserId` / `updatedByUserName` / `updatedTime` / `enabledFlag` / `deletedFlag`
+- 已通过 JDBC 在本地 `attendance_db` 实际执行 migration，并确认 6 张核心表都已完成字段同步
 
 ### 变更
 

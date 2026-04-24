@@ -188,3 +188,20 @@
 
 - 后续新增实体默认继承 `BaseEntity`，单表查询默认先尝试 MyBatis-Plus 通用能力。
 - 只有出现多表、复杂字段映射或 SQL 可读性明显下降时，再新建 XML Mapper。
+
+## 2026-04-24 - 公共基类字段命名一旦确定，代码和本地数据库要同轮同步
+
+### 背景
+
+公共基类最初已经落了一版字段，但字段名和你最终确认的 `createdByUserId`、`createdByUserName`、`createdTime`、`updatedByUserId`、`updatedByUserName`、`updatedTime`、`enabledFlag`、`deletedFlag` 不一致。如果只改 Java 实体，不改现有本地库，就会留下“代码和库结构对不上”的隐患。
+
+### 学到的内容
+
+- 这类基础字段命名一旦定版，不能只改实体类和初始化脚本；本地已存在的开发库也要同步迁移，否则后续联调时会出现列名找不到或旧字段遗留的问题。
+- 这类调整适合同时保留两类产物：一份最新的 `init.sql` 代表全新初始化结果，一份 migration 代表对既有数据库的实际升级路径。
+- “本地有数据库”这类前提不要再依赖 `mysql.exe` 是否在 PATH 里；当前项目本身已经有 JDBC 驱动和连接信息，用 JDBC 直接执行 migration 更稳，也更容易做列级校验。
+
+### 后续建议
+
+- 后续再出现基础字段或表结构命名调整时，默认同时更新 `sql/init.sql`、migration 文件和本地开发库。
+- 执行完 migration 后，补一层 `information_schema.COLUMNS` 查询校验，不要只看“脚本执行成功”。

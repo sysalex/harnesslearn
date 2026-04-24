@@ -1,6 +1,8 @@
 package com.attendance.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import java.time.LocalDateTime;
 
@@ -10,92 +12,103 @@ import java.time.LocalDateTime;
  */
 public class BaseEntity {
 
-    @TableField("created_by_id")
-    private Long createdById;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
-    @TableField("created_by_name")
-    private String createdByName;
+    @TableField("createdByUserId")
+    private Long createdByUserId;
 
-    @TableField("updated_by_id")
-    private Long updatedById;
+    @TableField("createdByUserName")
+    private String createdByUserName;
 
-    @TableField("updated_by_name")
-    private String updatedByName;
+    @TableField("createdTime")
+    private LocalDateTime createdTime;
 
-    @TableField("is_enabled")
-    private Boolean enabled;
+    @TableField("updatedByUserId")
+    private Long updatedByUserId;
+
+    @TableField("updatedByUserName")
+    private String updatedByUserName;
+
+    @TableField("updatedTime")
+    private LocalDateTime updatedTime;
+
+    @TableField("enabledFlag")
+    private Boolean enabledFlag;
 
     @TableLogic(value = "0", delval = "1")
-    @TableField("is_deleted")
-    private Boolean deleted;
+    @TableField("deletedFlag")
+    private Boolean deletedFlag;
 
-    @TableField("created_at")
-    private LocalDateTime createdAt;
-
-    @TableField("updated_at")
-    private LocalDateTime updatedAt;
-
-    public Long getCreatedById() {
-        return createdById;
+    public Long getId() {
+        return id;
     }
 
-    public void setCreatedById(Long createdById) {
-        this.createdById = createdById;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getCreatedByName() {
-        return createdByName;
+    public Long getCreatedByUserId() {
+        return createdByUserId;
     }
 
-    public void setCreatedByName(String createdByName) {
-        this.createdByName = createdByName;
+    public void setCreatedByUserId(Long createdByUserId) {
+        this.createdByUserId = createdByUserId;
     }
 
-    public Long getUpdatedById() {
-        return updatedById;
+    public String getCreatedByUserName() {
+        return createdByUserName;
     }
 
-    public void setUpdatedById(Long updatedById) {
-        this.updatedById = updatedById;
+    public void setCreatedByUserName(String createdByUserName) {
+        this.createdByUserName = createdByUserName;
     }
 
-    public String getUpdatedByName() {
-        return updatedByName;
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
     }
 
-    public void setUpdatedByName(String updatedByName) {
-        this.updatedByName = updatedByName;
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
+    public Long getUpdatedByUserId() {
+        return updatedByUserId;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setUpdatedByUserId(Long updatedByUserId) {
+        this.updatedByUserId = updatedByUserId;
     }
 
-    public Boolean getDeleted() {
-        return deleted;
+    public String getUpdatedByUserName() {
+        return updatedByUserName;
     }
 
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
+    public void setUpdatedByUserName(String updatedByUserName) {
+        this.updatedByUserName = updatedByUserName;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getUpdatedTime() {
+        return updatedTime;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public Boolean getEnabledFlag() {
+        return enabledFlag;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setEnabledFlag(Boolean enabledFlag) {
+        this.enabledFlag = enabledFlag;
+    }
+
+    public Boolean getDeletedFlag() {
+        return deletedFlag;
+    }
+
+    public void setDeletedFlag(Boolean deletedFlag) {
+        this.deletedFlag = deletedFlag;
     }
 }

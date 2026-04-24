@@ -43,6 +43,14 @@ class InitSqlScriptTest {
         assertTrue(script.contains("INSERT INTO `user`"));
         assertTrue(script.contains("'admin'"));
         assertTrue(script.contains("INSERT INTO `attendance_rule`"));
+        assertTrue(script.contains("`createdByUserId`"));
+        assertTrue(script.contains("`createdByUserName`"));
+        assertTrue(script.contains("`createdTime`"));
+        assertTrue(script.contains("`updatedByUserId`"));
+        assertTrue(script.contains("`updatedByUserName`"));
+        assertTrue(script.contains("`updatedTime`"));
+        assertTrue(script.contains("`enabledFlag`"));
+        assertTrue(script.contains("`deletedFlag`"));
 
         Set<String> violations = new HashSet<>();
         for (Map.Entry<String, Set<String>> entry : createTableReferences.entrySet()) {

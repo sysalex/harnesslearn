@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         if (user == null) {
             throw new BusinessException(UNAUTHORIZED_CODE, INVALID_CREDENTIALS_MESSAGE);
         }
-        if (!Boolean.TRUE.equals(user.getEnabled())) {
+        if (!Boolean.TRUE.equals(user.getEnabledFlag())) {
             throw new BusinessException(FORBIDDEN_CODE, DISABLED_ACCOUNT_MESSAGE);
         }
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {

@@ -49,14 +49,15 @@ class UserServiceArchitectureTest {
     @Test
     void userExtendsBaseEntityWithCommonAuditFields() {
         assertTrue(BaseEntity.class.isAssignableFrom(User.class));
-        assertHasField("createdById");
-        assertHasField("createdByName");
-        assertHasField("updatedById");
-        assertHasField("updatedByName");
-        assertHasField("enabled");
-        assertHasField("deleted");
-        assertHasField("createdAt");
-        assertHasField("updatedAt");
+        assertHasField("id");
+        assertHasField("createdByUserId");
+        assertHasField("createdByUserName");
+        assertHasField("createdTime");
+        assertHasField("updatedByUserId");
+        assertHasField("updatedByUserName");
+        assertHasField("updatedTime");
+        assertHasField("enabledFlag");
+        assertHasField("deletedFlag");
     }
 
     private void assertHasField(String fieldName) {
