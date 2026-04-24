@@ -1,14 +1,18 @@
 package com.attendance.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.attendance.entity.BaseEntity;
 import com.attendance.entity.User;
 import com.attendance.mapper.UserMapper;
 import com.attendance.service.impl.UserServiceImpl;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -35,5 +39,27 @@ class UserServiceArchitectureTest {
         ParameterizedType parameterizedType = (ParameterizedType) genericSuperclass;
         assertTrue(UserMapper.class.equals(parameterizedType.getActualTypeArguments()[0]));
         assertTrue(User.class.equals(parameterizedType.getActualTypeArguments()[1]));
+    }
+
+    @Test
+    void userMapperKeepsOnlyBaseMapperCapabilitiesForSingleTableQueries() {
+        assertEquals(0, UserMapper.class.getDeclaredMethods().length);
+    }
+
+    @Test
+    void userExtendsBaseEntityWithCommonAuditFields() {
+        assertTrue(BaseEntity.class.isAssignableFrom(User.class));
+        assertHasField("createdById");
+        assertHasField("createdByName");
+        assertHasField("updatedById");
+        assertHasField("updatedByName");
+        assertHasField("enabled");
+        assertHasField("deleted");
+        assertHasField("createdAt");
+        assertHasField("updatedAt");
+    }
+
+    private void assertHasField(String fieldName) {
+        assertTrue(Arrays.stream(BaseEntity.class.getDeclaredFields()).map(Field::getName).anyMatch(fieldName::equals));
     }
 }

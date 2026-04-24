@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private static final int ENABLED_STATUS = 1;
     private static final int UNAUTHORIZED_CODE = 401;
     private static final int FORBIDDEN_CODE = 403;
     private static final String DEFAULT_TOKEN_TYPE = "Bearer";
@@ -52,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         if (user == null) {
             throw new BusinessException(UNAUTHORIZED_CODE, INVALID_CREDENTIALS_MESSAGE);
         }
-        if (user.getStatus() == null || user.getStatus() != ENABLED_STATUS) {
+        if (!Boolean.TRUE.equals(user.getEnabled())) {
             throw new BusinessException(FORBIDDEN_CODE, DISABLED_ACCOUNT_MESSAGE);
         }
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {

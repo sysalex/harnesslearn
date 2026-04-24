@@ -37,7 +37,12 @@ CREATE TABLE `user` (
   `phone` VARCHAR(20) DEFAULT NULL COMMENT '手机号',
   `department_id` BIGINT DEFAULT NULL COMMENT '所属部门 ID',
   `role` ENUM('EMPLOYEE', 'MANAGER', 'HR', 'ADMIN') NOT NULL DEFAULT 'EMPLOYEE' COMMENT '角色',
-  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态: 1=启用, 0=禁用',
+  `created_by_id` BIGINT DEFAULT NULL COMMENT '创建人 ID',
+  `created_by_name` VARCHAR(50) DEFAULT NULL COMMENT '创建人名称',
+  `updated_by_id` BIGINT DEFAULT NULL COMMENT '更新人 ID',
+  `updated_by_name` VARCHAR(50) DEFAULT NULL COMMENT '更新人名称',
+  `is_enabled` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否启用',
+  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否删除',
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -152,13 +157,16 @@ INSERT INTO `department` (`id`, `name`, `manager_id`, `parent_id`) VALUES
 
 -- 3. 插入用户数据（密码均为 BCrypt 加密后的 "admin123"）
 -- BCrypt 密码: $2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i
-INSERT INTO `user` (`id`, `username`, `password`, `real_name`, `email`, `phone`, `department_id`, `role`, `status`) VALUES
-(1, 'admin', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '系统管理员', 'admin@example.com', '13800138000', 1, 'ADMIN', 1),
-(2, 'zhangsan', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '张三', 'zhangsan@example.com', '13800138001', 2, 'MANAGER', 1),
-(3, 'lisi', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '李四', 'lisi@example.com', '13800138002', 3, 'MANAGER', 1),
-(4, 'wangwu', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '王五', 'wangwu@example.com', '13800138003', 2, 'EMPLOYEE', 1),
-(5, 'zhaoliu', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '赵六', 'zhaoliu@example.com', '13800138004', 3, 'EMPLOYEE', 1),
-(6, 'hr01', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '人事专员', 'hr@example.com', '13800138005', 4, 'HR', 1);
+INSERT INTO `user` (
+  `id`, `username`, `password`, `real_name`, `email`, `phone`, `department_id`, `role`,
+  `created_by_id`, `created_by_name`, `updated_by_id`, `updated_by_name`, `is_enabled`, `is_deleted`
+) VALUES
+(1, 'admin', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '系统管理员', 'admin@example.com', '13800138000', 1, 'ADMIN', 1, '系统初始化', 1, '系统初始化', 1, 0),
+(2, 'zhangsan', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '张三', 'zhangsan@example.com', '13800138001', 2, 'MANAGER', 1, '系统初始化', 1, '系统初始化', 1, 0),
+(3, 'lisi', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '李四', 'lisi@example.com', '13800138002', 3, 'MANAGER', 1, '系统初始化', 1, '系统初始化', 1, 0),
+(4, 'wangwu', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '王五', 'wangwu@example.com', '13800138003', 2, 'EMPLOYEE', 1, '系统初始化', 1, '系统初始化', 1, 0),
+(5, 'zhaoliu', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '赵六', 'zhaoliu@example.com', '13800138004', 3, 'EMPLOYEE', 1, '系统初始化', 1, '系统初始化', 1, 0),
+(6, 'hr01', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYILp91S.0i', '人事专员', 'hr@example.com', '13800138005', 4, 'HR', 1, '系统初始化', 1, '系统初始化', 1, 0);
 
 -- 4. 更新部门主管
 UPDATE `department` SET `manager_id` = 2 WHERE `id` = 2;

@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * 用户持久化实体，只保留登录链路需要的最小字段集。
  */
 @TableName("user")
-public class User {
+public class User extends BaseEntity {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -22,8 +22,6 @@ public class User {
     private String realName;
 
     private String role;
-
-    private Integer status;
 
     public Long getId() {
         return id;
@@ -65,11 +63,4 @@ public class User {
         this.role = role;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 }

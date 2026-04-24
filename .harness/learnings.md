@@ -171,3 +171,20 @@
 
 - 后续新增领域服务时，默认先建 `Service` 接口和 `ServiceImpl`，再让业务服务依赖领域服务，而不是直接依赖 `Mapper`。
 - 后续若继续新增 `UserMapper` 自定义 SQL，默认放到 `backend/src/main/resources/mapper/*.xml`，并同步维护 `resultMap`。
+
+## 2026-04-24 - 单表查询优先走 MyBatis-Plus 通用能力，XML 留给多表和复杂映射
+
+### 背景
+
+登录链路第一次按“去掉 Mapper 注解 SQL、改成 XML”收口后，又复盘发现这对当前场景还是过重了：这里只是单表按用户名查一条用户记录，更适合直接使用 MyBatis-Plus 条件构造器。
+
+### 学到的内容
+
+- 单表查询如果只是等值条件、分页、排序、简单组合条件，优先走 `lambdaQuery()` / `LambdaQueryWrapper`，这样和 `IService` / `ServiceImpl` 的使用方式更一致。
+- XML 更适合多表查询、复杂结果映射、聚合统计或明显超出通用条件构造器可读性的 SQL；不要为了“把 SQL 挪出去”就把简单单表查询也强行写进 XML。
+- 公共字段一旦开始沉淀，就要尽早收口成基类，否则 `enabled`、`deleted`、`createdAt`、`updatedAt` 这类字段会在每个实体里反复散落，后面再统一成本更高。
+
+### 后续建议
+
+- 后续新增实体默认继承 `BaseEntity`，单表查询默认先尝试 MyBatis-Plus 通用能力。
+- 只有出现多表、复杂字段映射或 SQL 可读性明显下降时，再新建 XML Mapper。

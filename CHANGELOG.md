@@ -21,14 +21,15 @@
 - 后端 `SecurityConfigTest` 与 `JwtAuthenticationFilterTest`，用于校验登录接口放行和受保护接口鉴权
 - 后端登录链路：`AuthController`、`AuthService`、`LoginRequest`、`LoginResponse`、统一响应与全局异常处理
 - 后端 `UserService` 与 `UserServiceImpl`，用于承接 `IService` / `ServiceImpl` 风格的用户领域能力
-- 后端 `UserMapper.xml`，用于承接自定义用户名查询
-- 后端 `UserServiceArchitectureTest`，用于锁定 MyBatis-Plus 服务层继承结构
+- 后端 `UserServiceArchitectureTest`，用于锁定 MyBatis-Plus 服务层继承结构与公共实体约束
+- 后端公共 `BaseEntity`，统一承接审计字段、启用状态、逻辑删除、创建时间和更新时间
 
 ### 修复
 
 - 修正 `sql/init.sql` 中 `department` 表对 `user` 表的前向外键引用，改为在 `user` 表创建后追加 `manager_id` 外键
 - 在本地 MySQL 8.0.16 实例中完成 `sql/init.sql` 的真实执行验证，确认核心表、管理员种子数据和全局考勤规则初始化成功
-- 修正登录链路的 MyBatis-Plus 用法，避免服务层直接绕过 `IService`，并将 `UserMapper` 自定义查询从注解 SQL 迁移到 XML
+- 修正登录链路的 MyBatis-Plus 用法，服务层保留 `IService` / `ServiceImpl` 结构，但单表用户名查询改为 `lambdaQuery()`，不再保留 `UserMapper.xml`
+- 修正用户公共字段建模，`status` 已切换为 `is_enabled` / `is_deleted`，并补齐创建人、更新人相关字段
 
 ### 变更
 

@@ -76,7 +76,7 @@ class AuthServiceImplTest {
     @Test
     void loginRejectsDisabledUser() {
         User user = buildUser();
-        user.setStatus(0);
+        user.setEnabled(false);
         when(userService.findByUsername("admin")).thenReturn(user);
 
         BusinessException exception = assertThrows(BusinessException.class,
@@ -93,7 +93,8 @@ class AuthServiceImplTest {
         user.setPassword("$2a$12$hash");
         user.setRealName("系统管理员");
         user.setRole("ADMIN");
-        user.setStatus(1);
+        user.setEnabled(true);
+        user.setDeleted(false);
         return user;
     }
 }
