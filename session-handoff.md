@@ -6,48 +6,36 @@
 
 ## 当前状态
 
-- `1.1.1` 已完成：后端已从单模块改为 `attendance-server-*` 六模块 Maven Reactor。
-- `1.1.2` 已完成：前端骨架已落地，状态未受本次后端重构影响。
-- `1.1.3` 阻塞中：本地仍未安装 Docker，容器化验证暂未继续。
-- `1.2.1` 已完成：`sql/init.sql` 结构测试仍通过。
-- `1.2.2` 已完成：MyBatis-Plus 配置迁移到 `attendance-server-infrastructure`，分页拦截器与 Mapper 扫描验证通过。
-- `1.3.1` 已完成：`JwtTokenProvider` 迁移到基础设施模块，原有 token 行为保持不变。
-- `1.3.2` 已完成：`SecurityConfig` 与 `JwtAuthenticationFilter` 迁移到基础设施模块，登录接口继续放行。
-- `1.3.3` 已完成：登录控制器、应用服务、统一响应和异常处理已迁到新模块结构。
-- `1.3.3.1` 已完成：后端按 `bh-im-server` 风格完成六模块分层重构，旧 `backend/src` 单模块残留已移除。
+- `1.3.3.1` 已完成：后端已按 `bh-im-server` 风格重构为 `attendance-server-shared / domain / infrastructure / application / interfaces / starter` 六模块 Maven Reactor。
+- 认证链路已迁入新结构，Java 包根统一为 `com.attendance.server.*`，旧 `backend/src` 单模块残留已移除。
+- 为了让仓库级质量门禁可直接运行，已补齐：
+  - `scripts/check.bat`：执行前自动切换到 `%USERPROFILE%\.jdks\ms-21.0.10`
+  - `frontend/package.json`：新增 `npm run type-check`
 
 ## 本次完成内容
 
-- `backend/pom.xml` 改为父级 Reactor，新增：
-  - `attendance-server-shared`
-  - `attendance-server-domain`
-  - `attendance-server-infrastructure`
-  - `attendance-server-application`
-  - `attendance-server-interfaces`
-  - `attendance-server-starter`
-- Java 包根统一切换为 `com.attendance.server.*`
-- 登录 DTO 调整到 `application.auth.dto`，避免 `application -> interfaces` 反向依赖
-- `UserService` 契约放到 `domain.user.service`，`UserServiceImpl` 放到 `infrastructure.persistence.service`
-- `GlobalExceptionHandler` 移到 `interfaces.rest.error`
-- 测试按模块归位：
-  - `starter`: 结构、上下文、配置、安全、SQL 测试
-  - `interfaces`: 控制器 HTTP 契约测试
-  - `application`: 登录应用服务测试
-  - `infrastructure`: JWT 工具与过滤器测试
+- 后端多模块父子 POM、模块依赖和包结构已落地。
+- 登录相关 DTO 已下沉到 `application.auth.dto`，修正 `application -> interfaces` 反向依赖。
+- 控制器、应用服务、领域服务、基础设施实现和共享组件已按职责归位。
+- 测试已按模块归位到 `starter / interfaces / application / infrastructure`。
+- 质量门禁脚本已修复编码与环境问题，当前可在根目录直接运行。
 
 ## 已完成验证
 
-- `backend`: `mvn compile`
-- `backend`: `mvn test`
-- `backend`: `mvn checkstyle:check`
+- `scripts/check.bat`
+  - 后端 `mvn compile`
+  - 后端 `mvn clean test`
+  - 后端 `mvn checkstyle:check`
+  - 前端 `npm run type-check`
+  - 前端 `npm run lint`
 
-## 阻塞项
+## 当前阻塞
 
-- 命令行默认 JDK 仍指向旧版本；后端 Maven 验证需要显式切到 `%USERPROFILE%\\.jdks\\ms-21.0.10`
-- Docker 相关任务仍因本地环境缺失而阻塞
+- `1.1.3 Docker 环境` 仍阻塞：本地尚未安装 Docker，容器化相关任务暂未继续。
+- 终端默认 `JAVA_HOME` 仍指向 JDK 8，但仓库质量门禁已通过脚本显式切换到 `%USERPROFILE%\.jdks\ms-21.0.10` 规避该问题。
 
 ## 下一步建议
 
-1. 开始 `1.3.4`，在新多模块结构上补齐 `GET /api/auth/profile`、`PUT /api/auth/profile`、`PUT /api/auth/password`
-2. 后续新增领域能力时，默认沿用当前模块边界：`interfaces -> application -> infrastructure -> domain -> shared`
-3. 若继续扩展认证链路，优先在模块内补测试，不要再回到聚合式单模块测试布局
+1. 开始 `1.3.4`，在当前多模块结构上补齐 `GET /api/auth/profile`、`PUT /api/auth/profile`、`PUT /api/auth/password`。
+2. 后续新增后端能力时，继续保持 `interfaces -> application -> infrastructure -> domain -> shared` 的边界，不要回退到聚合式单模块写法。
+3. 若后续继续扩展认证链路，优先在所属模块内补测试，再做实现。

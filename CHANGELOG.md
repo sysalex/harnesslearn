@@ -7,6 +7,11 @@
 
 ## [Unreleased]
 
+### Supplemental
+
+- `scripts/check.bat` now switches to `%USERPROFILE%\.jdks\ms-21.0.10` before backend verification, so clean Maven checks no longer depend on the terminal default JDK 8.
+- `frontend/package.json` now exposes `npm run type-check`, aligning the quality gate script with the actual frontend toolchain.
+
 ### 添加
 
 - 初始项目结构
