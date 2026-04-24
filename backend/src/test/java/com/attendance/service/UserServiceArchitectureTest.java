@@ -12,6 +12,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
@@ -58,6 +60,16 @@ class UserServiceArchitectureTest {
         assertHasField("updatedTime");
         assertHasField("enabledFlag");
         assertHasField("deletedFlag");
+    }
+
+    @Test
+    void baseEntityUsesLombokInsteadOfManualAccessors() throws Exception {
+        String source = Files.readString(
+                Path.of("src", "main", "java", "com", "attendance", "entity", "BaseEntity.java"));
+        assertTrue(source.contains("@Getter"));
+        assertTrue(source.contains("@Setter"));
+        assertTrue(!source.contains("public Long getId()"));
+        assertTrue(!source.contains("public void setId("));
     }
 
     private void assertHasField(String fieldName) {
