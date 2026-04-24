@@ -154,3 +154,20 @@
 
 - 后续继续补 `profile` / `password` 能力时，默认同步检查现有 `SpringBootTest`、`WebMvcTest` 是否需要新的 `@MockBean` 隔离。
 - 测试切面遇到上下文装配问题时，优先 mock 外部依赖或补最小真实 bean，不要留下只为测试存在、又可能混入生产主线的临时配置类。
+
+## 2026-04-24 - MyBatis-Plus 服务层和自定义查询要保持同一套分层风格
+
+### 背景
+
+推进登录链路后复盘发现，虽然 `UserMapper` 已接入 MyBatis-Plus，但服务层仍直接依赖 `Mapper`，并且自定义用户名查询写成了注解 SQL，这和项目当前约定的分层方式不一致。
+
+### 学到的内容
+
+- 既然项目已经选择 MyBatis-Plus，领域服务层就应统一走 `IService<T>` / `ServiceImpl<M, T>` 这套继承结构，不要一部分走通用服务，一部分又回退到业务层直连 `Mapper`。
+- 自定义查询如果不是极轻量且一次性的场景，优先放进 XML Mapper，避免注解 SQL 分散在接口定义里，后续扩展字段、结果映射或复用查询时更容易维护。
+- 当分层风格需要调整时，测试不应只盯行为结果，也要补结构性测试，把“服务是否继承 `IService` / `ServiceImpl`”这种约束锁住，避免后面再次回退。
+
+### 后续建议
+
+- 后续新增领域服务时，默认先建 `Service` 接口和 `ServiceImpl`，再让业务服务依赖领域服务，而不是直接依赖 `Mapper`。
+- 后续若继续新增 `UserMapper` 自定义 SQL，默认放到 `backend/src/main/resources/mapper/*.xml`，并同步维护 `resultMap`。

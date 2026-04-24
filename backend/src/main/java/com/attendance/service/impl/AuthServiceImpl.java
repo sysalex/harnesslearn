@@ -2,11 +2,11 @@ package com.attendance.service.impl;
 
 import com.attendance.entity.User;
 import com.attendance.exception.BusinessException;
-import com.attendance.mapper.UserMapper;
 import com.attendance.model.dto.auth.LoginRequest;
 import com.attendance.model.dto.auth.LoginResponse;
 import com.attendance.security.JwtTokenProvider;
 import com.attendance.service.AuthService;
+import com.attendance.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private static final String INVALID_CREDENTIALS_MESSAGE = "用户名或密码错误";
     private static final String DISABLED_ACCOUNT_MESSAGE = "账号已被禁用";
 
-    private final UserMapper userMapper;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -33,10 +33,10 @@ public class AuthServiceImpl implements AuthService {
     private long accessTokenExpirationMinutes = 30L;
 
     public AuthServiceImpl(
-            UserMapper userMapper,
+            UserService userService,
             PasswordEncoder passwordEncoder,
             JwtTokenProvider jwtTokenProvider) {
-        this.userMapper = userMapper;
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException(UNAUTHORIZED_CODE, INVALID_CREDENTIALS_MESSAGE);
         }
 
-        User user = userMapper.selectByUsername(request.username());
+        User user = userService.findByUsername(request.username());
         if (user == null) {
             throw new BusinessException(UNAUTHORIZED_CODE, INVALID_CREDENTIALS_MESSAGE);
         }

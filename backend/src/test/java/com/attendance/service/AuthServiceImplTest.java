@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import com.attendance.entity.User;
 import com.attendance.exception.BusinessException;
-import com.attendance.mapper.UserMapper;
 import com.attendance.model.dto.auth.LoginRequest;
 import com.attendance.model.dto.auth.LoginResponse;
 import com.attendance.security.JwtTokenProvider;
@@ -29,7 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 class AuthServiceImplTest {
 
     @Mock
-    private UserMapper userMapper;
+    private UserService userService;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -43,7 +42,7 @@ class AuthServiceImplTest {
     @Test
     void loginReturnsTokensForActiveUserWithValidPassword() {
         User user = buildUser();
-        when(userMapper.selectByUsername("admin")).thenReturn(user);
+        when(userService.findByUsername("admin")).thenReturn(user);
         when(passwordEncoder.matches("admin123", user.getPassword())).thenReturn(true);
         when(jwtTokenProvider.generateAccessToken(1L, "admin", "ADMIN")).thenReturn("access-token");
         when(jwtTokenProvider.generateRefreshToken(1L, "admin", "ADMIN")).thenReturn("refresh-token");
@@ -62,7 +61,7 @@ class AuthServiceImplTest {
     @Test
     void loginRejectsInvalidPassword() {
         User user = buildUser();
-        when(userMapper.selectByUsername("admin")).thenReturn(user);
+        when(userService.findByUsername("admin")).thenReturn(user);
         when(passwordEncoder.matches("wrong-password", user.getPassword())).thenReturn(false);
 
         BusinessException exception = assertThrows(BusinessException.class,
@@ -78,7 +77,7 @@ class AuthServiceImplTest {
     void loginRejectsDisabledUser() {
         User user = buildUser();
         user.setStatus(0);
-        when(userMapper.selectByUsername("admin")).thenReturn(user);
+        when(userService.findByUsername("admin")).thenReturn(user);
 
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> authService.login(new LoginRequest("admin", "admin123")));
