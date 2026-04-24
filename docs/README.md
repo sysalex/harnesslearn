@@ -47,6 +47,8 @@
 
 ## 5. 运行辅助
 
+- 后端 Maven 入口必须使用 `../attendance/pom.xml`
+  不要单独导入 `../attendance/attendance-server/pom.xml`，否则 `attendance-common` 不在同一个 Reactor 中，IDE 会出现模块依赖飘红。
 - `../session-handoff.md`
   当前会话状态和下一步
 - `../.harness/learnings.md`

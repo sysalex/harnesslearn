@@ -38,6 +38,7 @@
 - 修正后端 POM 依赖方向，`application` 不再依赖 `infrastructure`，由 `starter` 聚合运行时基础设施模块。
 - 修正启动组件扫描范围，确保 `attendance-common` 中的 `JwtTokenProvider` 能被 Spring 上下文装配。
 - 修正多模块下沉后的 `sql/init.sql` 结构测试路径。
+- 修正 IDEA Maven 导入入口，避免单独导入 `attendance/attendance-server/pom.xml` 时 `attendance-common` 不在 Reactor 中导致依赖飘红。
 - 修复后端多模块迁移后 Java 注释中的中文乱码，并确认仓库内未残留典型 mojibake 字符串
 - 修正 `sql/init.sql` 中 `department` 表对 `user` 表的前向外键引用，改为在 `user` 表创建后追加 `manager_id` 外键
 - 在本地 MySQL 8.0.16 实例中完成 `sql/init.sql` 的真实执行验证，确认核心表、管理员种子数据和全局考勤规则初始化成功
