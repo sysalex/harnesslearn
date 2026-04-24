@@ -1,4 +1,4 @@
-package com.attendance.server.interfaces.rest.error;
+package com.attendance.server.interfaces.controller.error;
 
 import com.attendance.common.exception.BusinessException;
 import com.attendance.common.response.ApiResponse;
