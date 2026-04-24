@@ -14,6 +14,7 @@
 
 ## 本次完成内容
 
+- 修复 `attendance-server-*` 多模块目录下 10 个 Java 文件的中文注释乱码，范围仅限注释文本，不改变业务逻辑。
 - 后端多模块父子 POM、模块依赖和包结构已落地。
 - 登录相关 DTO 已下沉到 `application.auth.dto`，修正 `application -> interfaces` 反向依赖。
 - 控制器、应用服务、领域服务、基础设施实现和共享组件已按职责归位。
@@ -22,6 +23,11 @@
 
 ## 已完成验证
 
+- 已运行典型 mojibake 字符串扫描
+  - 返回 exit 1，表示未匹配到已知乱码特征。
+- `mvn test`（在 `attendance` 目录显式设置 `JAVA_HOME=%USERPROFILE%\.jdks\ms-21.0.10`）
+  - 7 个 Maven 模块全部 SUCCESS
+  - 19 个测试，0 failures / 0 errors / 0 skipped
 - `scripts/check.bat`
   - 后端 `mvn compile`
   - 后端 `mvn clean test`

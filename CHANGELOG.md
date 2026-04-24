@@ -33,6 +33,7 @@
 
 ### 修复
 
+- 修复后端多模块迁移后 Java 注释中的中文乱码，并确认仓库内未残留典型 mojibake 字符串
 - 修正 `sql/init.sql` 中 `department` 表对 `user` 表的前向外键引用，改为在 `user` 表创建后追加 `manager_id` 外键
 - 在本地 MySQL 8.0.16 实例中完成 `sql/init.sql` 的真实执行验证，确认核心表、管理员种子数据和全局考勤规则初始化成功
 - 修正登录链路的 MyBatis-Plus 用法，服务层保留 `IService` / `ServiceImpl` 结构，但单表用户名查询改为 `lambdaQuery()`，不再保留 `UserMapper.xml`
