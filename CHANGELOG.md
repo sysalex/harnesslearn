@@ -38,6 +38,10 @@
 
 ### 变更
 
+- 将 `backend` 从单模块 Spring Boot 工程重构为 `attendance-server-shared / domain / infrastructure / application / interfaces / starter` 六模块 Maven Reactor
+- 后端 Java 包根统一切换为 `com.attendance.server.*`，并按模块职责重新安放认证链路代码
+- 登录 DTO 下沉到 `application.auth.dto`，控制器改为依赖应用层契约，避免 `application -> interfaces` 反向依赖
+- 后端测试按模块重新归位，新增多模块结构守卫测试并移除旧 `backend/src` 单模块残留目录
 - 启用 MyBatis-Plus 数据源配置、Mapper 扫描和 MySQL 分页拦截器
 - 新增 `JwtTokenProvider` 和 `jwt.*` 配置项，启用 JWT access/refresh token 基础能力
 - 新增 `SecurityConfig` 与 `JwtAuthenticationFilter`，启用 Spring Security 无状态鉴权主链路

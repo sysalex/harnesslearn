@@ -1,0 +1,64 @@
+package com.attendance.server.shared.response;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+/**
+ * 缁熶竴鎺ュ彛杩斿洖浣擄紝璐熻矗鎵胯浇鐘舵€佺爜銆佹彁绀轰俊鎭€佷笟鍔℃暟鎹拰鏃堕棿鎴炽€? */
+@JsonInclude(JsonInclude.Include.ALWAYS)
+public class ApiResponse<T> {
+
+    private int code;
+    private String message;
+    private T data;
+    private long timestamp;
+
+    public ApiResponse() {
+    }
+
+    private ApiResponse(int code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(200, "success", data);
+    }
+
+    public static <T> ApiResponse<T> error(int code, String message) {
+        return new ApiResponse<>(code, message, null);
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+}

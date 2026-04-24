@@ -105,6 +105,18 @@
   - 说明：补齐统一响应、`BusinessException`、全局异常处理和登录参数校验，覆盖 200/400/401/403 响应语义
   - 说明：后端回归通过 `mvn test` 与 `mvn checkstyle:check`
 
+- [x] 1.3.3.1 后端多模块分层重构（参照 bh-im-server）
+  - 优先级: REQUIRED
+  - 依赖: 1.3.3
+  - 验收标准:
+    - [x] `backend` 已拆为 `attendance-server-shared / domain / infrastructure / application / interfaces / starter` 六个 Maven 子模块
+    - [x] Java 包根统一为 `com.attendance.server`
+    - [x] 现有认证链路行为不变，后端 `mvn test` 与 `mvn checkstyle:check` 全部通过
+    - [x] `docs/task-list.md`、`CHANGELOG.md`、`session-handoff.md` 已同步更新
+  - 完成时间：2026-04-24
+  - 说明：参照 `bh-im-server` 的职责分层，将 `backend` 从单模块重构为多模块 Reactor，保留当前认证能力不变
+  - 说明：测试已按模块归位到 `starter / interfaces / application / infrastructure`，旧 `backend/src` 单模块残留已移除
+
 - [ ] 1.3.4 实现用户信息管理
   - 优先级: REQUIRED
   - 依赖: 1.3.3
