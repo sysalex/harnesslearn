@@ -1,5 +1,23 @@
 # Learnings
 
+## 2026-04-24 - interfaces 层 REST 入站包必须严格使用 rest 命名
+
+### 背景
+
+后端分层纠偏后，架构测试已经锁定 `com.attendance.server.interfaces.rest.*`，但实际代码仍停留在 `interfaces.controller.*`，导致结构约束和代码位置不一致。
+
+### 学到的内容
+
+- `interfaces` 模块内的 HTTP 入站适配统一使用 `rest` 包名，避免 `controller` 与架构测试、文档语义分裂。
+- `GlobalExceptionHandler` 属于 REST 入站适配层，模块应在 `attendance-server-interfaces`，包应跟随 `interfaces.rest.error`。
+- MyBatis-Plus 配置属于持久化基础设施，继续放在 `infrastructure.config`；JWT 过滤器属于安全基础设施，继续放在 `infrastructure.security`。
+- Security Filter Chain 负责组合 URL 白名单、安全过滤器和启动时 Bean 装配，更适合放在 `starter.config`，不应进入 `attendance-common`。
+
+### 后续建议
+
+- 后续新增控制器、请求响应异常处理或 REST advice 时，直接放入 `com.attendance.server.interfaces.rest.*`。
+- 结构性包名调整后优先跑 `BackendLayeringStructureTest`，再跑对应接口行为测试。
+
 ## 2026-04-24 - 先看业务服务拆分方式，再决定公共模块命名
 
 ### 背景

@@ -1,4 +1,4 @@
-package com.attendance.server.interfaces.controller.auth;
+package com.attendance.server.interfaces.rest.auth;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.attendance.server.application.auth.AuthApplicationService;
 import com.attendance.server.application.auth.dto.LoginRequest;
 import com.attendance.server.application.auth.dto.LoginResponse;
-import com.attendance.server.interfaces.controller.error.GlobalExceptionHandler;
+import com.attendance.server.interfaces.rest.error.GlobalExceptionHandler;
 import com.attendance.common.exception.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

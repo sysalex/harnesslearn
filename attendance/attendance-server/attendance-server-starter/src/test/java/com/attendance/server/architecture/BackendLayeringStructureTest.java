@@ -134,7 +134,7 @@ class BackendLayeringStructureTest {
                 "com.attendance.server.infrastructure.persistence.repository.UserRepositoryImpl",
                 "com.attendance.common.security.JwtTokenProvider",
                 "com.attendance.server.infrastructure.security.JwtAuthenticationFilter",
-                "com.attendance.server.infrastructure.config.SecurityConfig",
+                "com.attendance.server.starter.config.SecurityConfig",
                 "com.attendance.server.infrastructure.config.MyBatisPlusConfig",
                 "com.attendance.common.response.ApiResponse",
                 "com.attendance.common.exception.BusinessException");

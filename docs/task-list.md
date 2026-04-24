@@ -129,6 +129,8 @@
   - 说明：当前任务只纠偏登录链路和模块依赖，不新增 `1.3.4` 用户信息接口
   - 说明：后端结构已调整为 `attendance-common` 与 `attendance-server` 聚合服务，`attendance-server` 内保留 `starter / interfaces / application / domain / infrastructure` 五层模块。
   - 说明：登录链路已改为 `AuthController -> AuthApplicationService -> UserService/UserRepository -> UserRepositoryImpl -> UserMapper`。
+  - 说明：已严格归位 REST 入站适配层，`AuthController` 与 `GlobalExceptionHandler` 统一位于 `interfaces.rest.*` 包。
+  - 说明：已严格归位安全链装配，`SecurityConfig` 位于 `starter.config`，`JwtAuthenticationFilter` 保留在 `infrastructure.security`。
 
 - [ ] 1.3.4 实现用户信息管理
   - 优先级: REQUIRED

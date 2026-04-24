@@ -1,4 +1,4 @@
-package com.attendance.server.interfaces.controller.auth;
+package com.attendance.server.interfaces.rest.auth;
 
 import com.attendance.server.application.auth.AuthApplicationService;
 import com.attendance.server.application.auth.dto.LoginRequest;

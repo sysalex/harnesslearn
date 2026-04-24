@@ -14,6 +14,8 @@
 
 ## 本次完成内容
 
+- 严格归位 REST 入站适配层包路径：`AuthController` 迁入 `com.attendance.server.interfaces.rest.auth`，`GlobalExceptionHandler` 迁入 `com.attendance.server.interfaces.rest.error`。
+- 严格归位安全链装配：`SecurityConfig` 迁入 `com.attendance.server.starter.config`；`MyBatisPlusConfig` 继续位于 `infrastructure.config`，`JwtAuthenticationFilter` 继续位于 `infrastructure.security`。
 - 移除 `attendance-server-shared` 模块命名，公共响应、异常和 JWT 基础组件迁入 `attendance-common`。
 - 新增领域仓储契约 `UserRepository`，由基础设施层 `UserRepositoryImpl` 适配 `UserMapper`。
 - 登录链路调整为 `AuthController -> AuthApplicationService -> UserService/UserRepository -> UserRepositoryImpl -> UserMapper`。
@@ -22,6 +24,10 @@
 
 ## 已完成验证
 
+- `mvn -pl attendance-server/attendance-server-starter,attendance-server/attendance-server-interfaces -am "-Dtest=BackendLayeringStructureTest,AuthControllerTest" "-Dsurefire.failIfNoSpecifiedTests=false" test`（在 `attendance` 目录显式设置 `JAVA_HOME=%USERPROFILE%\.jdks\ms-21.0.10`）
+  - `BackendLayeringStructureTest` 与 `AuthControllerTest` 通过，确认严格包路径与登录接口行为不变。
+- `mvn -pl attendance-server/attendance-server-starter -am "-Dtest=BackendLayeringStructureTest,SecurityConfigTest" "-Dsurefire.failIfNoSpecifiedTests=false" test`（在 `attendance` 目录显式设置 `JAVA_HOME=%USERPROFILE%\.jdks\ms-21.0.10`）
+  - `BackendLayeringStructureTest` 与 `SecurityConfigTest` 通过，确认安全链装配位置和认证拦截行为不变。
 - 已运行典型 mojibake 字符串扫描
   - 返回 exit 1，表示未匹配到已知乱码特征。
 - `mvn clean test`（在 `attendance` 目录显式设置 `JAVA_HOME=%USERPROFILE%\.jdks\ms-21.0.10`）

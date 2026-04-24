@@ -33,6 +33,8 @@
 
 ### 修复
 
+- 严格归位 REST 入站适配层包路径，`AuthController` 与 `GlobalExceptionHandler` 从 `interfaces.controller.*` 迁移到架构测试锁定的 `interfaces.rest.*`。
+- 严格归位安全链装配配置，`SecurityConfig` 从基础设施层迁移到 `starter.config`，`JwtAuthenticationFilter` 继续保留在 `infrastructure.security`。
 - 纠偏后端分层结构：移除 `attendance-server-shared`，改为同级 `attendance-common` 与 `attendance-server` 聚合服务，服务内保留 `starter / interfaces / application / domain / infrastructure` 五层。
 - 修正登录链路分层，用户查询改为 `domain.repository.UserRepository` 契约与 `infrastructure.persistence.repository.UserRepositoryImpl` 实现，避免应用层直接依赖基础设施。
 - 修正后端 POM 依赖方向，`application` 不再依赖 `infrastructure`，由 `starter` 聚合运行时基础设施模块。
@@ -56,7 +58,7 @@
 - 后端测试按模块重新归位，新增多模块结构守卫测试并移除旧 `backend/src` 单模块残留目录
 - 启用 MyBatis-Plus 数据源配置、Mapper 扫描和 MySQL 分页拦截器
 - 新增 `JwtTokenProvider` 和 `jwt.*` 配置项，启用 JWT access/refresh token 基础能力
-- 新增 `SecurityConfig` 与 `JwtAuthenticationFilter`，启用 Spring Security 无状态鉴权主链路
+- 新增 `SecurityConfig` 与 `JwtAuthenticationFilter`，启用 Spring Security 无状态鉴权主链路；其中安全链装配位于 `starter.config`，JWT 过滤器位于 `infrastructure.security`
 - 新增 `POST /api/auth/login` 登录接口，支持用户名密码校验、JWT access/refresh token 返回与 400/401/403 错误响应
 - 强化规范中的任务收尾要求：任务完成后默认执行 `commit + push`
 - 强化多 Agent 协作规则：满足无共享写入且无顺序依赖时默认并行，主线程负责集成、验证与提交

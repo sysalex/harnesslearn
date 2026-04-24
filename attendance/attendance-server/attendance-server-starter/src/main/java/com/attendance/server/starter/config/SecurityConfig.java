@@ -1,4 +1,4 @@
-package com.attendance.server.infrastructure.config;
+package com.attendance.server.starter.config;
 
 import com.attendance.server.infrastructure.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.ObjectProvider;
