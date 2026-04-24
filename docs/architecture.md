@@ -59,111 +59,90 @@
 
 ## 2. 后端架构
 
-### 2.1 分层架构
+### 2.1 Maven 模块结构
+
+后端对齐 `seckill` 的组织方式：先保留一个业务服务 `attendance-server`，服务内部按五层拆分；跨服务公共能力放到同级 `attendance-common`。
 
 ```
-Controller 层
-  ↓ (接收请求、参数校验、返回响应)
-Service 层
-  ↓ (业务逻辑、事务管理)
-Mapper 层 (MyBatis-Plus)
-  ↓ (SQL 执行)
-Database (MySQL)
+attendance/
+├── attendance-common/
+└── attendance-server/
+    ├── attendance-server-starter/
+    ├── attendance-server-interfaces/
+    ├── attendance-server-application/
+    ├── attendance-server-domain/
+    └── attendance-server-infrastructure/
 ```
 
-**分层约束**：
-- ✅ Controller → Service → Mapper → Database（允许）
-- ❌ Controller → Mapper（禁止，跨层调用）
-- ❌ Service → Service（禁止，避免循环依赖）
-- ❌ Mapper 含业务逻辑（禁止）
+### 2.2 分层依赖
 
-### 2.2 包结构设计
+登录链路当前采用以下调用方向：
 
 ```
-com.attendance
-├── config/              # 配置类
-│   ├── SecurityConfig.java
-│   ├── MyBatisConfig.java
-│   ├── WebConfig.java
-│   └── SwaggerConfig.java
-├── controller/          # Controller 层
-│   ├── AuthController.java
-│   ├── AttendanceController.java
-│   ├── LeaveController.java
-│   ├── MakeUpController.java
-│   ├── ReportController.java
-│   ├── UserController.java
-│   └── DepartmentController.java
-├── service/             # Service 层
-│   ├── AuthService.java
-│   ├── AttendanceService.java
-│   ├── LeaveService.java
-│   ├── MakeUpService.java
-│   ├── ReportService.java
-│   ├── UserService.java
-│   └── DepartmentService.java
-├── mapper/              # Mapper 层
-│   ├── UserMapper.java
-│   ├── AttendanceRecordMapper.java
-│   ├── LeaveApplicationMapper.java
-│   ├── MakeUpApplicationMapper.java
-│   └── DepartmentMapper.java
-├── entity/              # 实体类
-│   ├── User.java
-│   ├── AttendanceRecord.java
-│   ├── LeaveApplication.java
-│   ├── MakeUpApplication.java
-│   ├── Department.java
-│   └── AttendanceRule.java
-├── dto/                 # DTO 类
-│   ├── request/
-│   │   ├── LoginRequest.java
-│   │   ├── ClockInRequest.java
-│   │   ├── LeaveApplyRequest.java
-│   │   └── MakeUpApplyRequest.java
-│   └── response/
-│       ├── LoginResponse.java
-│       ├── AttendanceStatsResponse.java
-│       └── ReportExportResponse.java
-├── common/              # 公共类
-│   ├── Result.java
-│   ├── PageResult.java
-│   ├── BusinessException.java
-│   ├── GlobalExceptionHandler.java
-│   └── ErrorCode.java
-├── security/            # 安全相关
-│   ├── JwtTokenProvider.java
-│   ├── JwtAuthenticationFilter.java
-│   └── UserDetailsServiceImpl.java
-├── enums/               # 枚举类
-│   ├── UserRole.java
-│   ├── AttendanceStatus.java
-│   ├── LeaveType.java
-│   ├── ApplicationStatus.java
-│   └── ClockType.java
-└── util/                # 工具类
-    ├── DateUtil.java
-    ├── ExcelUtil.java
-    └── RequestIdUtil.java
+AuthController
+  -> AuthApplicationService
+    -> UserService / UserRepository
+      -> UserRepositoryImpl
+        -> UserMapper
 ```
 
-### 2.3 统一响应格式
+**模块依赖约束**：
+- `attendance-server-interfaces` 只依赖 `attendance-server-application` 和 `attendance-common`。
+- `attendance-server-application` 依赖 `attendance-server-domain` 和 `attendance-common`，不依赖 `infrastructure`。
+- `attendance-server-domain` 定义实体、领域服务和仓储契约，不依赖 MyBatis-Plus 的 Mapper / ServiceImpl。
+- `attendance-server-infrastructure` 实现仓储契约，承接 MyBatis-Plus、Spring Security、Mapper 和数据库配置。
+- `attendance-server-starter` 只负责启动装配、组件扫描和运行时聚合。
+- `attendance-common` 放置跨层通用响应、异常和 JWT 这类可复用基础组件。
+
+### 2.3 包结构设计
+
+```
+com.attendance.common
+├── exception/
+├── response/
+└── security/
+
+com.attendance.server.interfaces
+└── rest/
+
+com.attendance.server.application
+└── auth/
+
+com.attendance.server.domain
+├── common/entity/
+└── user/
+    ├── entity/
+    ├── repository/
+    └── service/
+
+com.attendance.server.infrastructure
+├── config/
+├── persistence/
+│   ├── mapper/
+│   └── repository/
+└── security/
+
+com.attendance.server.starter
+└── AttendanceServerApplication
+```
+
+### 2.4 统一响应格式
 
 ```java
-public class Result<T> {
+public class ApiResponse<T> {
     private Integer code;
     private String message;
     private T data;
     private Long timestamp;
     
     // 成功响应
-    public static <T> Result<T> success(T data) {
-        return new Result<>(200, "success", data);
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(200, "success", data);
     }
     
     // 错误响应
-    public static <T> Result<T> error(Integer code, String message) {
-        return new Result<>(code, message, null);
+    public static <T> ApiResponse<T> error(Integer code, String message) {
+        return new ApiResponse<>(code, message, null);
     }
 }
 ```
@@ -182,7 +161,7 @@ public class Result<T> {
 }
 ```
 
-### 2.4 异常处理机制
+### 2.5 异常处理机制
 
 **全局异常处理器**：
 
@@ -191,24 +170,24 @@ public class Result<T> {
 public class GlobalExceptionHandler {
     
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Result> handleBusinessException(BusinessException e) {
+    public ResponseEntity<ApiResponse<?>> handleBusinessException(BusinessException e) {
         return ResponseEntity.status(e.getCode())
-            .body(Result.error(e.getCode(), e.getMessage()));
+            .body(ApiResponse.error(e.getCode(), e.getMessage()));
     }
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Result> handleValidationException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ApiResponse<?>> handleValidationException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getFieldErrors().stream()
             .map(FieldError::getDefaultMessage)
             .collect(Collectors.joining(", "));
-        return ResponseEntity.badRequest().body(Result.error(400, message));
+        return ResponseEntity.badRequest().body(ApiResponse.error(400, message));
     }
     
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Result> handleException(Exception e) {
+    public ResponseEntity<ApiResponse<?>> handleException(Exception e) {
         log.error("系统异常", e);
         return ResponseEntity.status(500)
-            .body(Result.error(500, "系统异常，请联系管理员"));
+            .body(ApiResponse.error(500, "系统异常，请联系管理员"));
     }
 }
 ```

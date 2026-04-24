@@ -12,19 +12,15 @@
     </parent>
 
     <groupId>com.attendance</groupId>
-    <artifactId>attendance-server</artifactId>
+    <artifactId>attendance</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>attendance-server</name>
-    <description>企业考勤系统后端多模块父工程</description>
+    <name>attendance</name>
+    <description>企业考勤系统后端聚合工程</description>
 
     <modules>
-        <module>attendance-server-shared</module>
-        <module>attendance-server-domain</module>
-        <module>attendance-server-infrastructure</module>
-        <module>attendance-server-application</module>
-        <module>attendance-server-interfaces</module>
-        <module>attendance-server-starter</module>
+        <module>attendance-common</module>
+        <module>attendance-server</module>
     </modules>
 
     <properties>

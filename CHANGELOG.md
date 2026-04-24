@@ -33,6 +33,11 @@
 
 ### 修复
 
+- 纠偏后端分层结构：移除 `attendance-server-shared`，改为同级 `attendance-common` 与 `attendance-server` 聚合服务，服务内保留 `starter / interfaces / application / domain / infrastructure` 五层。
+- 修正登录链路分层，用户查询改为 `domain.repository.UserRepository` 契约与 `infrastructure.persistence.repository.UserRepositoryImpl` 实现，避免应用层直接依赖基础设施。
+- 修正后端 POM 依赖方向，`application` 不再依赖 `infrastructure`，由 `starter` 聚合运行时基础设施模块。
+- 修正启动组件扫描范围，确保 `attendance-common` 中的 `JwtTokenProvider` 能被 Spring 上下文装配。
+- 修正多模块下沉后的 `sql/init.sql` 结构测试路径。
 - 修复后端多模块迁移后 Java 注释中的中文乱码，并确认仓库内未残留典型 mojibake 字符串
 - 修正 `sql/init.sql` 中 `department` 表对 `user` 表的前向外键引用，改为在 `user` 表创建后追加 `manager_id` 外键
 - 在本地 MySQL 8.0.16 实例中完成 `sql/init.sql` 的真实执行验证，确认核心表、管理员种子数据和全局考勤规则初始化成功
@@ -44,7 +49,7 @@
 
 ### 变更
 
-- 将 `backend` 从单模块 Spring Boot 工程重构为 `attendance-server-shared / domain / infrastructure / application / interfaces / starter` 六模块 Maven Reactor
+- 将 `backend` 从单模块 Spring Boot 工程重构为 `attendance-common` 与 `attendance-server` 聚合服务；`attendance-server` 内按 `starter / interfaces / application / domain / infrastructure` 五层拆分
 - 后端 Java 包根统一切换为 `com.attendance.server.*`，并按模块职责重新安放认证链路代码
 - 登录 DTO 下沉到 `application.auth.dto`，控制器改为依赖应用层契约，避免 `application -> interfaces` 反向依赖
 - 后端测试按模块重新归位，新增多模块结构守卫测试并移除旧 `backend/src` 单模块残留目录

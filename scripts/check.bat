@@ -19,7 +19,7 @@ if exist "%PREFERRED_JAVA_HOME%\bin\java.exe" (
 
 echo.
 echo ^>^>^> Java compile...
-pushd backend
+pushd attendance
 call mvn compile -q
 if errorlevel 1 (
     echo [FAIL] Java compile failed

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.attendance</groupId>
+        <artifactId>attendance</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>attendance-server</artifactId>
+    <packaging>pom</packaging>
+    <name>attendance-server</name>
+    <description>企业考勤系统后端服务模块</description>
+
+    <modules>
+        <module>attendance-server-starter</module>
+        <module>attendance-server-interfaces</module>
+        <module>attendance-server-application</module>
+        <module>attendance-server-domain</module>
+        <module>attendance-server-infrastructure</module>
+    </modules>
+</project>

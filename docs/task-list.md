@@ -109,13 +109,26 @@
   - 优先级: REQUIRED
   - 依赖: 1.3.3
   - 验收标准:
-    - [x] `backend` 已拆为 `attendance-server-shared / domain / infrastructure / application / interfaces / starter` 六个 Maven 子模块
+    - [x] `backend` 已拆为多模块 Maven Reactor（后续在 1.3.3.2 纠偏为 `attendance-common + attendance-server/*` 结构）
     - [x] Java 包根统一为 `com.attendance.server`
     - [x] 现有认证链路行为不变，后端 `mvn test` 与 `mvn checkstyle:check` 全部通过
     - [x] `docs/task-list.md`、`CHANGELOG.md`、`session-handoff.md` 已同步更新
   - 完成时间：2026-04-24
   - 说明：参照 `bh-im-server` 的职责分层，将 `backend` 从单模块重构为多模块 Reactor，保留当前认证能力不变
   - 说明：测试已按模块归位到 `starter / interfaces / application / infrastructure`，旧 `backend/src` 单模块残留已移除
+
+- [x] 1.3.3.2 后端分层架构纠偏（对齐 bh-im / seckill）
+  - 优先级: REQUIRED
+  - 依赖: 1.3.3.1
+  - 验收标准:
+    - [x] `interfaces` 只依赖 `application` 和公共模块，不直接依赖 `infrastructure`
+    - [x] `application` 不依赖 `infrastructure` 模块且不直接 import `infrastructure` 包
+    - [x] 用户查询按 `domain.repository` 契约和 `infrastructure.repository` 实现分层
+    - [x] 现有登录链路行为不变，后端 `mvn test` 与 `mvn checkstyle:check` 通过
+  - 完成时间：2026-04-24
+  - 说明：当前任务只纠偏登录链路和模块依赖，不新增 `1.3.4` 用户信息接口
+  - 说明：后端结构已调整为 `attendance-common` 与 `attendance-server` 聚合服务，`attendance-server` 内保留 `starter / interfaces / application / domain / infrastructure` 五层模块。
+  - 说明：登录链路已改为 `AuthController -> AuthApplicationService -> UserService/UserRepository -> UserRepositoryImpl -> UserMapper`。
 
 - [ ] 1.3.4 实现用户信息管理
   - 优先级: REQUIRED

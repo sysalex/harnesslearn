@@ -41,9 +41,9 @@
 - `domain-model.md`
 - `adr/001-choose-mybatis-plus.md`
 - `superpowers/specs/`
-  任务级设计说明
+  历史临时设计草案，当前任务不再以此目录为有效规范来源
 - `superpowers/plans/`
-  任务级实施计划
+  历史临时实施计划，当前任务不再以此目录为有效规范来源
 
 ## 5. 运行辅助
 

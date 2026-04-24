@@ -1,5 +1,22 @@
 # Learnings
 
+## 2026-04-24 - 先看业务服务拆分方式，再决定公共模块命名
+
+### 背景
+
+后端第一次多模块拆分时只参考了 `bh-im-server` 的五层模块形态，却没有继续核对 `seckill` 顶层“公共模块 + 业务服务聚合”的组织方式，导致错误引入了 `attendance-server-shared` 这种不符合当前项目边界的模块名。
+
+### 学到的内容
+
+- 当前后端应先保留一个业务服务 `attendance-server`，服务内部再拆 `starter / interfaces / application / domain / infrastructure`；跨服务公共能力放到同级 `attendance-common`。
+- 领域层只能定义实体、领域服务和仓储契约，不应继承 MyBatis-Plus 的 `IService`，也不应感知 Mapper、SecurityConfig、MapperScan 等基础设施细节。
+- 登录这类链路要按 `Controller -> ApplicationService -> DomainService/Repository -> RepositoryImpl -> Mapper` 串起来，不能为了能跑通就让应用层直接 import 基础设施。
+
+### 后续建议
+
+- 后续新增用户信息、考勤、请假、补卡能力时，先确认它属于 `attendance-server` 内部模块，还是应该进入 `attendance-common`，不要再创建 `*-shared` 这种模糊模块。
+- 结构性调整必须补架构测试，至少锁住模块列表、POM 依赖方向和关键包 import 禁止项。
+
 ## 2026-04-22 - Harness 规范补充
 
 ### 背景
