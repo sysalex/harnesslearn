@@ -93,13 +93,17 @@
   - 说明：新增 `JwtAuthenticationFilter`，从 Bearer Token 恢复用户名和角色权限到 `SecurityContext`
   - 说明：已通过 `SecurityConfigTest` 与 `JwtAuthenticationFilterTest` 验证公开接口、受保护接口和过滤器行为
 
-- [ ] 1.3.3 实现用户登录接口
+- [x] 1.3.3 实现用户登录接口
   - 优先级: REQUIRED
   - 依赖: 1.3.2
   - 验收标准:
-    - [ ] POST /api/auth/login 接口
-    - [ ] 返回 JWT Token
-    - [ ] 错误处理完整
+    - [x] POST /api/auth/login 接口
+    - [x] 返回 JWT Token
+    - [x] 错误处理完整
+  - 完成时间：2026-04-24
+  - 说明：新增 `AuthController`、`AuthService`、`UserMapper` 和最小登录链路实体/DTO，打通用户名查询、密码校验、JWT access/refresh token 返回
+  - 说明：补齐统一响应、`BusinessException`、全局异常处理和登录参数校验，覆盖 200/400/401/403 响应语义
+  - 说明：后端回归通过 `mvn test` 与 `mvn checkstyle:check`
 
 - [ ] 1.3.4 实现用户信息管理
   - 优先级: REQUIRED

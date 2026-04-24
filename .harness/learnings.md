@@ -136,3 +136,21 @@
 
 - 后续继续多 agent 时，优先按“配置类 / 过滤器 / 控制器 / 服务 / Mapper”这种天然边界拆写入范围。
 - 主线集成时先检查包名、Bean 依赖和文件归属，再跑完整测试，不要只看子 agent 的局部通过结果。
+
+## 2026-04-24 - 引入首个 Mapper 后，测试切面要主动隔离数据库依赖
+
+### 背景
+
+推进 `1.3.3 实现用户登录接口` 时，仓库第一次真正落了 `UserMapper` 和 `AuthServiceImpl`。这会把此前只做配置验证的 `SpringBootTest` / `WebMvcTest` 一起带进 MyBatis 装配和安全 Bean 依赖。
+
+### 学到的内容
+
+- 引入首个 `Mapper` 之后，原来“没有真实 Mapper 也能过”的上下文测试会立刻受 `@MapperScan` 和数据源依赖影响，不能继续假设测试切片天然隔离。
+- `WebMvcTest` 在导入 `SecurityConfig` 后，如果安全链里有 `JwtAuthenticationFilter`，就要显式补齐 `JwtTokenProvider` 的测试 bean；否则会在 Web 层测试里卡在安全装配，而不是接口行为。
+- 对于只验证上下文是否能启动或安全放行规则的测试，用 `@MockBean UserMapper` 挡住数据库装配，比为了测试去引入一层临时 `SqlSessionFactory` 兜底更稳，也更接近真实运行边界。
+- 登录接口的“错误处理完整”不应只停留在 401/403，还要补参数校验的 400 路径，并用单一输入场景锁定单一错误消息，避免一个测试同时命中多个字段校验导致断言不稳定。
+
+### 后续建议
+
+- 后续继续补 `profile` / `password` 能力时，默认同步检查现有 `SpringBootTest`、`WebMvcTest` 是否需要新的 `@MockBean` 隔离。
+- 测试切面遇到上下文装配问题时，优先 mock 外部依赖或补最小真实 bean，不要留下只为测试存在、又可能混入生产主线的临时配置类。

@@ -23,6 +23,7 @@
 - 后端 `MyBatisPlusConfigTest`，用于校验数据源配置、Mapper 扫描配置和 MySQL 分页拦截器
 - 后端 `JwtTokenProviderTest`，用于校验 JWT 的生成、校验、刷新、篡改拒绝和 Claims 解析
 - 后端 `SecurityConfigTest` 和 `JwtAuthenticationFilterTest`，用于校验登录接口放行、受保护接口鉴权和 JWT 过滤器行为
+- 后端登录链路：`AuthController`、`AuthService`、`UserMapper`、`LoginRequest`、`LoginResponse`、统一响应与全局异常处理
 
 ### 修复
 
@@ -35,6 +36,7 @@
 - 新增 `JwtTokenProvider` 和 `jwt.*` 配置项，启用 JWT access/refresh token 基础能力
 - 在 `AGENTS.md` 补充“代码注释默认使用中文”的仓库规范
 - 新增 `SecurityConfig` 与 `JwtAuthenticationFilter`，启用 Spring Security 无状态鉴权主链路
+- 新增 `POST /api/auth/login` 登录接口，支持用户名密码校验、JWT access/refresh token 返回与 400/401/403 错误响应
 - 强化规范中的任务收尾要求：任务完成后默认执行 `commit + push`
 - 强化多 Agent 协作规则：满足无共享写入且无顺序依赖时默认并行，主线程负责集成、验证与提交
 
