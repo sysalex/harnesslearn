@@ -14,29 +14,24 @@
 - `1.3.1` 已完成：`JwtTokenProvider` 已支持 access/refresh token 的生成、校验、刷新和 claims 解析。
 - `1.3.2` 已完成：`SecurityConfig` 与 `JwtAuthenticationFilter` 已接入，放行 `/api/auth/login`，其余接口默认要求认证。
 - `1.3.3` 已完成：登录接口、统一响应、参数校验和全局异常处理已打通。
-- `1.3.3` 已补充修正：单表用户名查询已改回 MyBatis-Plus `lambdaQuery()`，`UserMapper` 不再声明自定义单表方法。
-- `1.3.3` 已补充修正：`BaseEntity` 已改用 Lombok 的 `@Getter` / `@Setter`，不再手写成组 getter/setter。
-- `1.3.3` 已补充修正：Java 字段继续使用 `createdByUserId`、`createdByUserName`、`createdTime`、`updatedByUserId`、`updatedByUserName`、`updatedTime`、`enabledFlag`、`deletedFlag`，数据库列统一改为 snake_case。
-- `1.3.3` 已补充修正：`sql/init.sql` 和本地 `attendance_db` 均已对齐 snake_case 列名；`sql/migrations/20260424_align_common_base_columns.sql` 已更新为最终版迁移脚本，本地库也已实际重命名完成。
+- `1.3.3` 已补充修正：`BaseEntity` 和 `User` 都已切到 Lombok；`entity` 包下不再手写机械 getter/setter。
+- `1.3.3` 已补充修正：Java 字段保留 camelCase，数据库列统一改为 snake_case；`sql/init.sql` 与 `sql/migrations/20260424_align_common_base_columns.sql` 已对齐这一规范。
+- `1.3.3` 已补充修正：新增 `sql/migrations/20260424_fix_common_column_comments.sql`，用于补齐本地已更新表上的公共列注释；本地 `attendance_db` 已实际执行并校验通过。
 
 ## 已完成
 
-- 后端通过 `mvn test`，当前共 28 个测试全绿。
+- 后端通过 `mvn test`，当前共 29 个测试全绿。
 - 后端通过 `mvn checkstyle:check`。
 - `UserServiceArchitectureTest` 已锁定以下约束：
   - `UserService` 继续继承 `IService<User>`
   - `UserServiceImpl` 继续继承 `ServiceImpl<UserMapper, User>`
   - `UserMapper` 不再声明单表自定义方法
   - `User` 必须继承 `BaseEntity`
-  - `BaseEntity` 必须使用 Lombok
+  - `BaseEntity` 与 `User` 都必须使用 Lombok
   - `init.sql` 必须使用 snake_case 公共列名
-- 本地数据库已通过 JDBC 方式实际执行 snake_case 重命名，并查询确认以下 6 张表都已具备 snake_case 公共字段：
-  - `department`
-  - `user`
-  - `attendance_rule`
-  - `attendance_record`
-  - `leave_application`
-  - `makeup_application`
+- 本地数据库已通过 JDBC 方式完成两类真实校验：
+  - 6 张核心表都已具备 snake_case 公共字段
+  - 6 张核心表的公共列都已有非空注释
 
 ## 进行中
 
@@ -50,14 +45,16 @@
 ## 下一步建议
 
 1. 开始 `1.3.4`，补齐 `GET /api/auth/profile`、`PUT /api/auth/profile`、`PUT /api/auth/password`。
-2. 后续新增实体默认继承 `BaseEntity`，Java 字段保留 camelCase，数据库列统一 snake_case。
-3. 后续单表查询默认优先走 MyBatis-Plus 通用能力，只有多表查询或复杂结果映射再引入 XML。
-4. 如需在别的环境同步表结构，直接复用 `sql/migrations/20260424_align_common_base_columns.sql`。
+2. 后续 `entity` 包下的简单实体默认统一用 Lombok，避免再回退到手写访问器。
+3. 后续结构迁移默认同时校验三件事：字段存在、命名正确、注释存在。
+4. 如需在别的环境同步表结构，优先执行：
+   - `sql/migrations/20260424_align_common_base_columns.sql`
+   - `sql/migrations/20260424_fix_common_column_comments.sql`
 
 ## 验证结果
 
-- `backend`: `mvn -Dtest=UserServiceArchitectureTest,InitSqlScriptTest test`
+- `backend`: `mvn -Dtest=UserServiceArchitectureTest test`
 - `backend`: `mvn test`
 - `backend`: `mvn checkstyle:check`
-- `backend`: JDBC 重命名现有库中的 camelCase 公共列为 snake_case
-- `backend`: JDBC 查询 `information_schema.COLUMNS`，确认 6 张表均具备 snake_case 公共字段
+- `backend`: JDBC 执行 `sql/migrations/20260424_fix_common_column_comments.sql`
+- `backend`: JDBC 查询 `information_schema.COLUMNS`，确认 6 张表公共列注释均存在

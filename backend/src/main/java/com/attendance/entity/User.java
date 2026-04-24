@@ -2,10 +2,14 @@ package com.attendance.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * 用户持久化实体，只保留登录链路需要的最小字段集。
+ * 用户持久化实体，当前阶段聚焦登录链路所需的最小用户字段集合。
  */
+@Getter
+@Setter
 @TableName("user")
 public class User extends BaseEntity {
 
@@ -17,37 +21,4 @@ public class User extends BaseEntity {
     private String realName;
 
     private String role;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
 }

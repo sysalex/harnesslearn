@@ -72,6 +72,15 @@ class UserServiceArchitectureTest {
         assertTrue(!source.contains("public void setId("));
     }
 
+    @Test
+    void userEntityUsesLombokInsteadOfManualAccessors() throws Exception {
+        String source = Files.readString(Path.of("src", "main", "java", "com", "attendance", "entity", "User.java"));
+        assertTrue(source.contains("@Getter"));
+        assertTrue(source.contains("@Setter"));
+        assertTrue(!source.contains("public String getUsername()"));
+        assertTrue(!source.contains("public void setUsername("));
+    }
+
     private void assertHasField(String fieldName) {
         assertTrue(Arrays.stream(BaseEntity.class.getDeclaredFields()).map(Field::getName).anyMatch(fieldName::equals));
     }

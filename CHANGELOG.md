@@ -24,15 +24,17 @@
 - 后端 `UserServiceArchitectureTest`，用于锁定 MyBatis-Plus 服务层继承结构与公共实体约束
 - 后端公共 `BaseEntity`，统一承接 `id`、`createdByUserId`、`createdByUserName`、`createdTime`、`updatedByUserId`、`updatedByUserName`、`updatedTime`、`enabledFlag`、`deletedFlag`
 - 数据库迁移脚本 `sql/migrations/20260424_align_common_base_columns.sql`，用于把既有表结构对齐到 snake_case 公共列命名
+- 数据库迁移脚本 `sql/migrations/20260424_fix_common_column_comments.sql`，用于补齐已更新公共列的列注释
 
 ### 修复
 
 - 修正 `sql/init.sql` 中 `department` 表对 `user` 表的前向外键引用，改为在 `user` 表创建后追加 `manager_id` 外键
 - 在本地 MySQL 8.0.16 实例中完成 `sql/init.sql` 的真实执行验证，确认核心表、管理员种子数据和全局考勤规则初始化成功
 - 修正登录链路的 MyBatis-Plus 用法，服务层保留 `IService` / `ServiceImpl` 结构，但单表用户名查询改为 `lambdaQuery()`，不再保留 `UserMapper.xml`
-- 修正公共实体实现，`BaseEntity` 改用 Lombok 的 `@Getter` / `@Setter`，不再手写 getter/setter
+- 修正公共实体实现，`BaseEntity` 与 `User` 均改用 Lombok 的 `@Getter` / `@Setter`，不再手写 getter/setter
 - 修正公共字段列命名，Java 字段保留 camelCase，数据库列统一改为 `created_by_user_id`、`created_by_user_name`、`created_time`、`updated_by_user_id`、`updated_by_user_name`、`updated_time`、`enabled_flag`、`deleted_flag`
 - 已通过 JDBC 在本地 `attendance_db` 实际执行 snake_case 重命名，并确认 6 张核心表都已完成字段同步
+- 已通过 JDBC 在本地 `attendance_db` 实际补齐公共列注释，并确认 6 张核心表公共列注释均存在
 
 ### 变更
 
